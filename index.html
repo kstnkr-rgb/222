@@ -8,157 +8,170 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background: url('background.png') no-repeat center center fixed;
-      background-size: cover;
-    }
-    #logo, #name {
-      display: block;
-      margin: 10px auto;
-      max-width: 150px;
-      height: auto;
-    }
-    #main-menu, #cookie-screen {
-      display: none;
-    }
-    #main-menu.active, #cookie-screen.active {
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
+      background-image: url('background.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
-    .icon-grid {
+
+    header {
+      position: fixed;
+      top: 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    header .logo {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+
+    header .name {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .icons {
       display: grid;
-      grid-template-columns: 120px 120px;
+      grid-template-columns: repeat(2, 120px);
       grid-gap: 20px;
-      justify-content: center;
-      align-items: center;
+      place-items: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-    .icon-grid img {
-      width: 120px;
-      height: 120px;
+
+    .icons img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .icons img:hover {
+      transform: scale(1.1);
+    }
+
+    .cookie-screen {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .cookie-image {
+      width: 180px;
+      max-width: 300px;
+      transition: transform 0.5s ease;
+      margin-bottom: 20px;
       cursor: pointer;
     }
-    #back-btn {
-      position: absolute;
+
+    .cookie-image.opened {
+      transform: scale(2) rotate(-5deg); /* в 2 раза больше */
+    }
+
+    .fortune {
+      font-size: 36px;
+      font-weight: bold;
+      color: #fff !important;
+      min-height: 80px;
+      margin-bottom: 20px;
+      padding: 0 10px;
+      text-align: center;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .fortune.show {
+      opacity: 1;
+    }
+
+    #reloadButton {
+      display: none;
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    #reloadButton img {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    #backButton {
+      position: fixed;
       top: 15px;
       left: 15px;
       width: 40px;
       height: 40px;
-      cursor: pointer;
-    }
-    #cookie {
-      max-width: 200px;
-      margin: 20px auto;
-      cursor: pointer;
-      transition: transform 0.5s ease, max-width 0.5s ease;
-    }
-    #cookie.opened {
-      max-width: 400px; /* в 2 раза больше */
-      transform: scale(1.1); /* лёгкое увеличение для эффекта */
-    }
-    #prediction {
-      font-size: 24px;
-      font-weight: bold;
-      margin-top: 20px;
-      color: white;
-      text-shadow: 1px 1px 3px black;
-    }
-    #reload-btn {
-      margin-top: 20px;
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
       display: none;
+      z-index: 2000;
+    }
+
+    #backButton img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    @media (max-width: 350px) {
+      .cookie-image {
+        width: 150px;
+      }
+      .fortune {
+        font-size: 28px;
+        min-height: 70px;
+      }
     }
   </style>
 </head>
 <body>
-  <img id="logo" src="logo.png" alt="Логотип">
-  <img id="name" src="name.png" alt="Название">
 
-  <!-- Главное меню -->
-  <div id="main-menu" class="active">
-    <div class="icon-grid">
-      <img src="sphere.png" alt="Сфера">
-      <img id="cookie-btn" src="cookie.png" alt="Печенье">
-      <img src="tarot.png" alt="Таро">
-      <img src="zodiac.png" alt="Зодиак">
-    </div>
-  </div>
+<header>
+  <img src="logo.png" alt="Логотип" class="logo">
+  <img src="name.png" alt="Название" class="name">
+</header>
 
-  <!-- Экран с печеньем -->
-  <div id="cookie-screen">
-    <img id="back-btn" src="back.png" alt="Назад">
-    <img id="cookie" src="cookie_closed.png" alt="Печенье">
-    <p id="prediction"></p>
-    <img id="reload-btn" src="reload.png" alt="Перезапуск">
-  </div>
+<!-- Главный экран -->
+<div class="icons" id="mainScreen">
+  <img src="sphere.png" alt="Шар">
+  <img src="cookie.png" alt="Печенье" onclick="showCookieScreen()">
+  <img src="tarot.png" alt="Таро">
+  <img src="zodiac.png" alt="Зодиак">
+</div>
 
-  <script>
-    const mainMenu = document.getElementById('main-menu');
-    const cookieScreen = document.getElementById('cookie-screen');
-    const cookieBtn = document.getElementById('cookie-btn');
-    const backBtn = document.getElementById('back-btn');
-    const cookie = document.getElementById('cookie');
-    const prediction = document.getElementById('prediction');
-    const reloadBtn = document.getElementById('reload-btn');
+<!-- Экран с печеньем -->
+<div class="cookie-screen" id="cookieScreen">
+  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
+  <div class="fortune" id="fortune"></div>
+  <button id="reloadButton" onclick="reloadCookie()">
+    <img src="reload.png" alt="Перезагрузить">
+  </button>
+</div>
 
-    let predictions = [];
-
-    // Загружаем предсказания из JSON
-    fetch('predictions.json')
-      .then(res => res.json())
-      .then(data => predictions = data)
-      .catch(err => console.error('Ошибка загрузки предсказаний:', err));
-
-    // Открытие экрана с печеньем
-    cookieBtn.addEventListener('click', () => {
-      mainMenu.classList.remove('active');
-      cookieScreen.classList.add('active');
-    });
-
-    // Возврат на главный экран
-    backBtn.addEventListener('click', () => {
-      cookieScreen.classList.remove('active');
-      mainMenu.classList.add('active');
-      resetCookie();
-    });
-
-    // Клик по печенью = открытие
-    cookie.addEventListener('click', () => {
-      if (!cookie.classList.contains('opened')) {
-        cookie.src = 'cookie_open.png';
-        cookie.classList.add('opened');
-        showPrediction();
-        reloadBtn.style.display = 'block';
-      }
-    });
-
-    // Кнопка перезапуска
-    reloadBtn.addEventListener('click', () => {
-      resetCookie();
-    });
-
-    // Сброс состояния печенья
-    function resetCookie() {
-      cookie.src = 'cookie_closed.png';
-      cookie.classList.remove('opened');
-      prediction.textContent = '';
-      reloadBtn.style.display = 'none';
-    }
-
-    // Показ случайного предсказания
-    function showPrediction() {
-      if (predictions.length > 0) {
-        const randomIndex = Math.floor(Math.random() * predictions.length);
-        prediction.textContent = predictions[randomIndex];
-      } else {
-        prediction.textContent = 'Предсказание недоступно';
-      }
-    }
-  </script>
-</body>
-</html>
+<!--
