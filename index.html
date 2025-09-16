@@ -23,13 +23,21 @@
       position: fixed;
       top: 20px;
       width: 100%;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       font-size: 28px;
       font-weight: bold;
       color: #fff;
-      z-index: 1000;
-      pointer-events: none;
       text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    header .logo {
+      height: 40px;       /* фиксированная высота */
+      width: auto;        /* ширина по пропорции */
+      margin-right: 10px;
+      object-fit: contain;
     }
 
     .container {
@@ -53,9 +61,9 @@
     }
 
     .fortune {
-      font-size: 36px; /* крупный текст */
+      font-size: 36px;
       font-weight: bold;
-      color: #fff !important; /* белый цвет */
+      color: #fff !important;
       min-height: 80px;
       margin-bottom: 20px;
       padding: 0 10px;
@@ -128,7 +136,10 @@
 </head>
 <body>
 
-<header>Оракул</header>
+<header>
+  <img src="logo.png" alt="Логотип" class="logo">
+  Оракул
+</header>
 
 <div class="container">
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
