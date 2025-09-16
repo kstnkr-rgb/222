@@ -19,67 +19,50 @@
       background-repeat: no-repeat;
     }
 
-    .header-container {
-      position: fixed;
-      top: 20px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    .header-container .logo {
-      height: 40px;
-      width: auto;
-      object-fit: contain;
-      margin-bottom: 5px;
-    }
-
-    .header-container .name {
-      height: 50px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    header {
+      margin-top: 20px;
       text-align: center;
     }
 
-    /* Сетка для 4 иконок */
+    header img {
+      display: block;
+      margin: 0 auto 10px;
+      max-width: 120px;
+      height: auto;
+    }
+
     .icons {
+      flex: 1;
       display: grid;
-      grid-template-columns: repeat(2, 100px);
+      grid-template-columns: repeat(2, 120px);
       grid-gap: 20px;
+      align-content: center;
       justify-content: center;
-      margin-bottom: 20px;
     }
 
     .icons img {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.3s;
     }
 
     .icons img:hover {
       transform: scale(1.1);
     }
 
-    .cookie-section {
+    .cookie-screen {
       display: none;
+      flex: 1;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .cookie-image {
       width: 180px;
-      max-width: 250px;
       transition: transform 0.5s ease;
       margin-bottom: 20px;
     }
@@ -91,7 +74,7 @@
     .fortune {
       font-size: 36px;
       font-weight: bold;
-      color: #fff !important;
+      color: #fff;
       min-height: 80px;
       margin-bottom: 20px;
       padding: 0 10px;
@@ -123,13 +106,13 @@
       font-weight: bold;
       cursor: pointer;
       transition: background 0.3s;
+      border: none;
       outline: none;
     }
 
     #openButton {
       background-color: #ff914d;
       color: white;
-      border: none;
     }
 
     #openButton:hover {
@@ -139,7 +122,6 @@
     #reloadButton {
       display: none;
       background-color: transparent;
-      border: none;
       padding: 0;
     }
 
@@ -149,61 +131,58 @@
       object-fit: contain;
     }
 
-    @media (max-width: 350px) {
-      .icons {
-        grid-template-columns: repeat(2, 80px);
-        grid-gap: 15px;
-      }
-      .icons img {
-        width: 80px;
-        height: 80px;
-      }
-      .cookie-image {
-        width: 150px;
-      }
-      .button-wrapper {
-        width: 90%;
-        height: 50px;
-      }
-      .fortune {
-        font-size: 28px;
-        min-height: 70px;
-      }
-      .header-container .name {
-        height: 40px;
-      }
+    #backButton {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      width: 50px;
+      height: 50px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: none;
+      z-index: 2000;
+    }
+
+    #backButton img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
   </style>
 </head>
 <body>
 
-<div class="header-container">
-  <img src="logo.png" alt="Логотип" class="logo">
-  <img src="name.png" alt="Оракул" class="name">
+<header>
+  <img src="logo.png" alt="Логотип">
+  <img src="name.png" alt="Название">
+</header>
+
+<!-- Главный экран -->
+<div class="icons" id="mainScreen">
+  <img src="sphere.png" alt="Сфера">
+  <img src="cookie.png" alt="Печенье" onclick="showCookieScreen()">
+  <img src="tarot.png" alt="Таро">
+  <img src="zodiac.png" alt="Зодиак">
 </div>
 
-<div class="container">
-  <!-- Иконки -->
-  <div class="icons" id="mainIcons">
-    <img src="sphere.png" alt="Шар">
-    <img src="cookie.png" alt="Печенье" id="cookieIcon">
-    <img src="tarot.png" alt="Таро">
-    <img src="zodiac.png" alt="Зодиак">
-  </div>
+<!-- Экран с печеньем -->
+<div class="cookie-screen" id="cookieScreen">
+  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
+  <div class="fortune" id="fortune"></div>
 
-  <!-- Секция с печеньем -->
-  <div class="cookie-section" id="cookieSection">
-    <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
-    <div class="fortune" id="fortune"></div>
-
-    <div class="button-wrapper">
-      <button id="openButton" onclick="openCookie()">Открыть печенье</button>
-      <button id="reloadButton" onclick="reloadCookie()">
-        <img src="reload.png" alt="Перезагрузить">
-      </button>
-    </div>
+  <div class="button-wrapper">
+    <button id="openButton" onclick="openCookie()">Открыть печенье</button>
+    <button id="reloadButton" onclick="reloadCookie()">
+      <img src="reload.png" alt="Перезагрузить">
+    </button>
   </div>
 </div>
+
+<!-- Кнопка назад -->
+<button id="backButton" onclick="goBack()">
+  <img src="back.png" alt="Назад">
+</button>
 
 <script>
   let predictions = [];
@@ -213,14 +192,18 @@
     .then(data => predictions = data)
     .catch(err => console.error('Ошибка загрузки JSON:', err));
 
-  const cookieIcon = document.getElementById('cookieIcon');
-  const mainIcons = document.getElementById('mainIcons');
-  const cookieSection = document.getElementById('cookieSection');
+  function showCookieScreen() {
+    document.getElementById("mainScreen").style.display = "none";
+    document.getElementById("cookieScreen").style.display = "flex";
+    document.getElementById("backButton").style.display = "block";
+  }
 
-  cookieIcon.addEventListener('click', () => {
-    mainIcons.style.display = 'none';
-    cookieSection.style.display = 'flex';
-  });
+  function goBack() {
+    document.getElementById("mainScreen").style.display = "grid";
+    document.getElementById("cookieScreen").style.display = "none";
+    document.getElementById("backButton").style.display = "none";
+    reloadCookie();
+  }
 
   function openCookie() {
     const cookieImg = document.getElementById("cookieImage");
