@@ -19,27 +19,28 @@
       background-repeat: no-repeat;
     }
 
-    header {
+    .header-container {
       position: fixed;
       top: 20px;
       width: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      font-weight: bold;
-      color: #fff;
-      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
       z-index: 1000;
     }
 
-header .logo {
-  height: 40px;       /* фиксируем только высоту */
-  width: auto;        /* ширина подстраивается под пропорции */
-  margin-right: 10px;
-  object-fit: contain; /* сохраняет пропорции */
-}
+    .header-container .logo {
+      height: 40px;       
+      width: auto;        
+      object-fit: contain; 
+      margin-bottom: 5px;
+    }
 
+    .header-container .name {
+      height: 50px;       
+      width: auto;        
+      object-fit: contain; 
+    }
 
     .container {
       flex: 1;
@@ -96,6 +97,7 @@ header .logo {
       font-weight: bold;
       cursor: pointer;
       transition: background 0.3s;
+      outline: none; /* убираем черную обводку */
     }
 
     #openButton {
@@ -132,15 +134,18 @@ header .logo {
         font-size: 28px;
         min-height: 70px;
       }
+      .header-container .name {
+        height: 40px;
+      }
     }
   </style>
 </head>
 <body>
 
-<header>
+<div class="header-container">
   <img src="logo.png" alt="Логотип" class="logo">
-  Оракул
-</header>
+  <img src="name.png" alt="Оракул" class="name">
+</div>
 
 <div class="container">
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
@@ -157,7 +162,6 @@ header .logo {
 <script>
   let predictions = [];
 
-  // Загружаем предсказания из внешнего JSON
   fetch('predictions.json')
     .then(res => res.json())
     .then(data => predictions = data)
