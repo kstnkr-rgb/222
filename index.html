@@ -5,155 +5,192 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Оракул</title>
 <style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', sans-serif;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-image: url('background.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
-  header {
-    position: fixed;
-    top: 20px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1000;
-  }
+header {
+  position: fixed;
+  top: 20px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
 
-  header .logo {
-    height: 40px;
-    width: auto;
-    object-fit: contain;
-    margin-bottom: 5px;
-  }
+header .logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 5px;
+}
 
-  header .name {
-    height: 30px;
-    width: auto;
-    object-fit: contain;
-  }
+header .name {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
 
-  #buildNumber {
-    color: white;
-    text-shadow: 1px 1px 2px black;
-    margin: 5px 0;
-    font-size: 14px;
-  }
+#buildNumber {
+  color: white;
+  text-shadow: 1px 1px 2px black;
+  margin: 5px 0;
+  font-size: 14px;
+}
 
-  .icons {
-    display: grid;
-    grid-template-columns: repeat(2, 120px);
-    grid-gap: 20px;
-    place-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+.icons {
+  display: grid;
+  grid-template-columns: repeat(2, 120px);
+  grid-gap: 20px;
+  place-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
-  .icons img {
+.icons img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.icons img:hover {
+  transform: scale(1.1);
+}
+
+.screen {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.cookie-image, .sphere-image {
+  width: 180px;
+  max-width: 300px;
+  transition: transform 0.5s ease;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.cookie-image.opened {
+  transform: scale(2) rotate(-5deg);
+}
+
+.fortune, .sphere-text, .tarot-text {
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff !important;
+  min-height: 80px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.fortune.show, .sphere-text.show, .tarot-text.show {
+  opacity: 1;
+}
+
+#reloadButton {
+  display: none;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+#reloadButton img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+#backButton {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  padding: 0;
+  display: none;
+  z-index: 2000;
+}
+
+#backButton img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+/* Таро */
+.tarot-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.tarot-card-container {
+  width: 120px;
+  height: 180px;
+  perspective: 1000px;
+  cursor: pointer;
+  position: relative;
+}
+
+.tarot-card-container .tarot-card {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  transition: transform 0.6s;
+}
+
+.tarot-card-container .back {
+  transform: rotateY(180deg);
+}
+
+.tarot-card-container.flipped .front {
+  transform: rotateY(180deg);
+}
+
+.tarot-card-container.flipped .back {
+  transform: rotateY(0deg);
+}
+
+@media (max-width: 350px) {
+  .cookie-image, .sphere-image, .tarot-card-container {
     width: 100px;
-    height: 100px;
-    object-fit: contain;
-    cursor: pointer;
-    transition: transform 0.3s;
+    height: 150px;
   }
-
-  .icons img:hover {
-    transform: scale(1.1);
+  .fortune, .sphere-text, .tarot-text {
+    font-size: 28px;
+    min-height: 70px;
   }
-
-  .screen {
-    display: none;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .cookie-image, .sphere-image {
-    width: 180px;
-    max-width: 300px;
-    transition: transform 0.5s ease;
-    margin-bottom: 20px;
-    cursor: pointer;
-  }
-
-  .cookie-image.opened {
-    transform: scale(2) rotate(-5deg);
-  }
-
-  .fortune, .sphere-text {
-    font-size: 36px;
-    font-weight: bold;
-    color: #fff !important;
-    min-height: 80px;
-    margin-bottom: 20px;
-    padding: 0 10px;
-    text-align: center;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-    opacity: 0;
-    transition: opacity 0.8s ease;
-  }
-
-  .fortune.show, .sphere-text.show {
-    opacity: 1;
-  }
-
-  #reloadButton {
-    display: none;
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    margin-top: 10px;
-  }
-
-  #reloadButton img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
-    cursor: pointer;
-  }
-
-  #backButton {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: none;
-    padding: 0;
-    display: none;
-    z-index: 2000;
-  }
-
-  #backButton img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    cursor: pointer;
-  }
-
-  @media (max-width: 350px) {
-    .cookie-image, .sphere-image {
-      width: 150px;
-    }
-    .fortune, .sphere-text {
-      font-size: 28px;
-      min-height: 70px;
-    }
-  }
+}
 </style>
 </head>
 <body>
@@ -161,18 +198,18 @@
 <header>
   <img src="logo.png" alt="Логотип" class="logo">
   <img src="name.png" alt="Название" class="name">
-  <p id="buildNumber">Сборка 3</p>
+  <p id="buildNumber">Сборка 5</p>
 </header>
 
 <!-- Главный экран -->
 <div class="icons" id="mainScreen">
   <img src="sphere.png" alt="Шар" onclick="showSphereScreen()">
   <img src="cookie.png" alt="Печенье" onclick="showCookieScreen()">
-  <img src="tarot.png" alt="Таро">
+  <img src="tarot.png" alt="Таро" onclick="showTarotScreen()">
   <img src="zodiac.png" alt="Зодиак">
 </div>
 
-<!-- Экран с печеньем -->
+<!-- Экран печенья -->
 <div class="screen" id="cookieScreen">
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
   <div class="fortune" id="fortune"></div>
@@ -181,10 +218,29 @@
   </button>
 </div>
 
-<!-- Экран со сферой -->
+<!-- Экран сферы -->
 <div class="screen" id="sphereScreen">
   <img src="sphere.png" alt="Сфера" class="sphere-image">
   <div class="sphere-text" id="sphereText"></div>
+</div>
+
+<!-- Экран Таро -->
+<div class="screen" id="tarotScreen">
+  <div class="tarot-cards">
+    <div class="tarot-card-container" onclick="flipCard(this, 1)">
+      <div class="tarot-card front"><img src="close.png" alt="Рубашка"></div>
+      <div class="tarot-card back"><img src="open1.png" alt="Лицевая сторона"></div>
+    </div>
+    <div class="tarot-card-container" onclick="flipCard(this, 2)">
+      <div class="tarot-card front"><img src="close.png" alt="Рубашка"></div>
+      <div class="tarot-card back"><img src="open2.png" alt="Лицевая сторона"></div>
+    </div>
+    <div class="tarot-card-container" onclick="flipCard(this, 3)">
+      <div class="tarot-card front"><img src="close.png" alt="Рубашка"></div>
+      <div class="tarot-card back"><img src="open3.png" alt="Лицевая сторона"></div>
+    </div>
+  </div>
+  <div class="tarot-text" id="tarotText"></div>
 </div>
 
 <!-- Кнопка назад -->
@@ -195,114 +251,73 @@
 <script>
 let predictions = [];
 let spherePredictions = [];
+let tarotPredictions = [];
 
-// Загружаем предсказания печенья
-fetch('predictions.json')
-  .then(res => res.json())
-  .then(data => predictions = data)
-  .catch(err => console.error('Ошибка загрузки JSON:', err));
-
-// Загружаем предсказания сферы
-fetch('sphere_predictions.json')
-  .then(res => res.json())
-  .then(data => spherePredictions = data)
-  .catch(err => console.error('Ошибка загрузки JSON для сферы:', err));
+// Загрузка JSON
+fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data).catch(err=>console.error(err));
+fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data).catch(err=>console.error(err));
+fetch('tarot_predictions.json').then(res=>res.json()).then(data=>tarotPredictions=data).catch(err=>console.error(err));
 
 const mainScreen = document.getElementById("mainScreen");
 const cookieScreen = document.getElementById("cookieScreen");
 const sphereScreen = document.getElementById("sphereScreen");
+const tarotScreen = document.getElementById("tarotScreen");
 const cookieImg = document.getElementById("cookieImage");
 const fortune = document.getElementById("fortune");
 const reloadBtn = document.getElementById("reloadButton");
 const backBtn = document.getElementById("backButton");
 const sphereText = document.getElementById("sphereText");
+const tarotText = document.getElementById("tarotText");
 
-// Экран печенья
-function showCookieScreen() {
-  mainScreen.style.display = "none";
-  cookieScreen.style.display = "flex";
-  backBtn.style.display = "block";
-}
-
+// Печенье
+function showCookieScreen() { mainScreen.style.display="none"; cookieScreen.style.display="flex"; backBtn.style.display="block";}
 function openCookie() {
-  if (!cookieImg.classList.contains("opened")) {
-    cookieImg.src = "cookie_open.png";
+  if(!cookieImg.classList.contains("opened")){
+    cookieImg.src="cookie_open.png";
     cookieImg.classList.add("opened");
-
-    if (predictions.length > 0) {
-      const randomIndex = Math.floor(Math.random() * predictions.length);
-      fortune.textContent = predictions[randomIndex];
-      setTimeout(() => fortune.classList.add("show"), 100);
-    } else {
-      fortune.textContent = "Предсказание недоступно";
-      fortune.classList.add("show");
-    }
-    reloadBtn.style.display = "inline-block";
+    fortune.textContent = predictions.length ? predictions[Math.floor(Math.random()*predictions.length)] : "Предсказание недоступно";
+    fortune.classList.add("show");
+    reloadBtn.style.display="inline-block";
   }
 }
+function reloadCookie() { cookieImg.src="cookie_closed.png"; cookieImg.classList.remove("opened"); fortune.classList.remove("show"); fortune.textContent=""; reloadBtn.style.display="none";}
 
-function reloadCookie() {
-  cookieImg.src = "cookie_closed.png";
-  cookieImg.classList.remove("opened");
-  fortune.classList.remove("show");
-  fortune.textContent = "";
-  reloadBtn.style.display = "none";
-}
+// Сфера
+function showSphereScreen(){ mainScreen.style.display="none"; sphereScreen.style.display="flex"; backBtn.style.display="block"; sphereText.textContent=''; sphereText.classList.remove("show"); }
 
-// Экран сферы
-function showSphereScreen() {
-  mainScreen.style.display = "none";
-  sphereScreen.style.display = "flex";
-  backBtn.style.display = "block";
-  sphereText.textContent = '';
-  sphereText.classList.remove("show");
+// Таро
+function showTarotScreen(){ mainScreen.style.display="none"; tarotScreen.style.display="flex"; backBtn.style.display="block"; tarotText.textContent=''; tarotText.classList.remove("show"); 
+  for(let i=1;i<=3;i++){document.querySelectorAll(".tarot-card-container")[i-1].classList.remove("flipped");} 
 }
 
 // Кнопка назад
-function goBack() {
-  cookieScreen.style.display = "none";
-  sphereScreen.style.display = "none";
-  backBtn.style.display = "none";
-  mainScreen.style.display = "grid";
-  resetCookie();
+function goBack(){ cookieScreen.style.display="none"; sphereScreen.style.display="none"; tarotScreen.style.display="none"; backBtn.style.display="none"; mainScreen.style.display="grid"; reloadCookie();}
+
+// Переворот карты Таро
+function flipCard(container, num){
+  if(!container.classList.contains("flipped")){
+    container.classList.add("flipped");
+    tarotText.textContent = tarotPredictions.length ? tarotPredictions[Math.floor(Math.random()*tarotPredictions.length)] : "Толкование недоступно";
+    tarotText.classList.add("show");
+  }
 }
 
-function resetCookie() {
-  cookieImg.src = "cookie_closed.png";
-  cookieImg.classList.remove("opened");
-  fortune.classList.remove("show");
-  fortune.textContent = "";
-  reloadBtn.style.display = "none";
-}
-
-// Обработка тряски только для сферы
-let lastTime = new Date();
-window.addEventListener('devicemotion', (event) => {
-  if (sphereScreen.style.display !== 'flex') return; // только на экране сферы
-
-  const acceleration = event.accelerationIncludingGravity;
-  const currentTime = new Date();
-  const diffTime = currentTime - lastTime;
-
-  if (diffTime > 500) {
-    lastTime = currentTime;
-    const speed = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
-    if (speed > 25) {
-      showSpherePrediction();
+// Тряска для сферы
+let lastTime=new Date();
+window.addEventListener('devicemotion', event=>{
+  if(sphereScreen.style.display!=='flex') return;
+  const acc=event.accelerationIncludingGravity;
+  const now=new Date();
+  if(now-lastTime>500){
+    lastTime=now;
+    const speed=Math.abs(acc.x)+Math.abs(acc.y)+Math.abs(acc.z);
+    if(speed>25){
+      if(spherePredictions.length) { sphereText.textContent = spherePredictions[Math.floor(Math.random()*spherePredictions.length)]; }
+      else { sphereText.textContent="Предсказание недоступно"; }
+      sphereText.classList.add("show");
     }
   }
 });
-
-function showSpherePrediction() {
-  if (spherePredictions.length > 0) {
-    const randomIndex = Math.floor(Math.random() * spherePredictions.length);
-    sphereText.textContent = spherePredictions[randomIndex];
-    sphereText.classList.add("show");
-  } else {
-    sphereText.textContent = "Предсказание недоступно";
-    sphereText.classList.add("show");
-  }
-}
 </script>
 </body>
 </html>
