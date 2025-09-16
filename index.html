@@ -30,16 +30,16 @@
     }
 
     .header-container .logo {
-      height: 40px;       
-      width: auto;        
-      object-fit: contain; 
+      height: 40px;
+      width: auto;
+      object-fit: contain;
       margin-bottom: 5px;
     }
 
     .header-container .name {
-      height: 50px;       
-      width: auto;        
-      object-fit: contain; 
+      height: 50px;
+      width: auto;
+      object-fit: contain;
     }
 
     .container {
@@ -49,6 +49,32 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+    }
+
+    /* Сетка для 4 иконок */
+    .icons {
+      display: grid;
+      grid-template-columns: repeat(2, 100px);
+      grid-gap: 20px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .icons img {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .icons img:hover {
+      transform: scale(1.1);
+    }
+
+    .cookie-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
     }
 
     .cookie-image {
@@ -97,12 +123,13 @@
       font-weight: bold;
       cursor: pointer;
       transition: background 0.3s;
-      outline: none; /* убираем черную обводку */
+      outline: none;
     }
 
     #openButton {
       background-color: #ff914d;
       color: white;
+      border: none;
     }
 
     #openButton:hover {
@@ -123,6 +150,14 @@
     }
 
     @media (max-width: 350px) {
+      .icons {
+        grid-template-columns: repeat(2, 80px);
+        grid-gap: 15px;
+      }
+      .icons img {
+        width: 80px;
+        height: 80px;
+      }
       .cookie-image {
         width: 150px;
       }
@@ -148,14 +183,25 @@
 </div>
 
 <div class="container">
-  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
-  <div class="fortune" id="fortune"></div>
+  <!-- Иконки -->
+  <div class="icons" id="mainIcons">
+    <img src="sphere.png" alt="Шар">
+    <img src="cookie.png" alt="Печенье" id="cookieIcon">
+    <img src="tarot.png" alt="Таро">
+    <img src="zodiac.png" alt="Зодиак">
+  </div>
 
-  <div class="button-wrapper">
-    <button id="openButton" onclick="openCookie()">Открыть печенье</button>
-    <button id="reloadButton" onclick="reloadCookie()">
-      <img src="reload.png" alt="Перезагрузить">
-    </button>
+  <!-- Секция с печеньем -->
+  <div class="cookie-section" id="cookieSection">
+    <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
+    <div class="fortune" id="fortune"></div>
+
+    <div class="button-wrapper">
+      <button id="openButton" onclick="openCookie()">Открыть печенье</button>
+      <button id="reloadButton" onclick="reloadCookie()">
+        <img src="reload.png" alt="Перезагрузить">
+      </button>
+    </div>
   </div>
 </div>
 
@@ -166,6 +212,15 @@
     .then(res => res.json())
     .then(data => predictions = data)
     .catch(err => console.error('Ошибка загрузки JSON:', err));
+
+  const cookieIcon = document.getElementById('cookieIcon');
+  const mainIcons = document.getElementById('mainIcons');
+  const cookieSection = document.getElementById('cookieSection');
+
+  cookieIcon.addEventListener('click', () => {
+    mainIcons.style.display = 'none';
+    cookieSection.style.display = 'flex';
+  });
 
   function openCookie() {
     const cookieImg = document.getElementById("cookieImage");
