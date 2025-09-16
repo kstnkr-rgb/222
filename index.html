@@ -185,7 +185,7 @@ header .name {
 <header>
   <img src="logo.png" alt="Логотип" class="logo">
   <img src="name.png" alt="Название" class="name">
-  <p id="buildNumber">Сборка 7</p>
+  <p id="buildNumber">Сборка 8</p>
 </header>
 
 <!-- Главный экран -->
@@ -283,8 +283,16 @@ function openTarotCard(container, num){
   const cardImg = container.querySelector("img");
   if(cardImg.src.includes("close.png")){
     cardImg.src = `open${num}.png`;
-    tarotText.textContent = tarotPredictions.length ? tarotPredictions[Math.floor(Math.random()*tarotPredictions.length)] : "Толкование недоступно";
-    tarotText.classList.add("show");
+    
+    // Берём правильный текст из JSON
+    if(tarotPredictions.length){
+      const prediction = tarotPredictions[Math.floor(Math.random()*tarotPredictions.length)];
+      tarotText.textContent = prediction.text; // <-- Важно .text
+      tarotText.classList.add("show");
+    } else {
+      tarotText.textContent = "Толкование недоступно";
+      tarotText.classList.add("show");
+    }
   }
 }
 
