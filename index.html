@@ -24,10 +24,17 @@
       text-align: center;
     }
 
-    header img {
+    header .logo {
       display: block;
       margin: 0 auto 10px;
-      max-width: 120px;
+      width: 120px;   /* фиксируем размер лого */
+      height: auto;
+    }
+
+    header .name {
+      display: block;
+      margin: 0 auto;
+      width: 180px;   /* фиксируем размер названия */
       height: auto;
     }
 
@@ -135,8 +142,6 @@
       position: fixed;
       top: 15px;
       left: 15px;
-      width: 50px;
-      height: 50px;
       background: transparent;
       border: none;
       cursor: pointer;
@@ -145,17 +150,18 @@
     }
 
     #backButton img {
-      width: 100%;
-      height: 100%;
+      width: 40px;   /* уменьшаем иконку */
+      height: 40px;
       object-fit: contain;
+      display: block;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="logo.png" alt="Логотип">
-  <img src="name.png" alt="Название">
+  <img src="logo.png" alt="Логотип" class="logo">
+  <img src="name.png" alt="Название" class="name">
 </header>
 
 <!-- Главный экран -->
