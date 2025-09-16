@@ -1,0 +1,18 @@
+https://xray.abvpn.ru/vless/e7c59fc7-3af4-4e58-804e-4c49b1fd2b1e/246249790.json#abvpn
+
+
+
+ls -la ~/Downloads/hiddify-linux-x64.AppImage
+
+
+curl --location "https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=pop-bin" | tar --extract --preserve-permissions --bzip2
+
+
+
+chmod +x ~/Downloads/Outline-Client.AppImage
+
+~/Downloads/Outline-Client.AppImage
+
+
+ssconf://outline.abvpn.net/dynamic-keys/e7c59fc7-3af4-4e58-804e-4c49b1fd2b1e/de15.abvpn.net_246249790.yaml
+#🇩🇪Германия#15 ❯ Outline abvpn
