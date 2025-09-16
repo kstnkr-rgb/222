@@ -10,11 +10,13 @@
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
       height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       background-image: url('background.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      overflow: hidden;
     }
 
     header {
@@ -22,30 +24,20 @@
       text-align: center;
     }
 
-    header .logo {
+    header img {
       display: block;
       margin: 0 auto 10px;
-      width: 120px;
+      max-width: 120px;
       height: auto;
     }
 
-    header .name {
-      display: block;
-      margin: 0 auto;
-      width: 180px;
-      height: auto;
-    }
-
-    /* --- Главный экран с 4 иконками --- */
     .icons {
+      flex: 1;
       display: grid;
       grid-template-columns: repeat(2, 120px);
       grid-gap: 20px;
-      place-items: center;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      align-content: center;
+      justify-content: center;
     }
 
     .icons img {
@@ -60,7 +52,6 @@
       transform: scale(1.1);
     }
 
-    /* --- Экран с печеньем --- */
     .cookie-screen {
       display: none;
       flex: 1;
@@ -140,11 +131,12 @@
       object-fit: contain;
     }
 
-    /* --- Кнопка Назад --- */
     #backButton {
       position: fixed;
       top: 15px;
       left: 15px;
+      width: 50px;
+      height: 50px;
       background: transparent;
       border: none;
       cursor: pointer;
@@ -153,18 +145,17 @@
     }
 
     #backButton img {
-      width: 40px;
-      height: 40px;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      display: block;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="logo.png" alt="Логотип" class="logo">
-  <img src="name.png" alt="Название" class="name">
+  <img src="logo.png" alt="Логотип">
+  <img src="name.png" alt="Название">
 </header>
 
 <!-- Главный экран -->
