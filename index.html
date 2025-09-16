@@ -1,185 +1,190 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Оракул</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-image: url('background.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оракул</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 
-    header {
-      position: fixed;
-      top: 20px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
+  header {
+    position: fixed;
+    top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1000;
+  }
 
-    header .logo {
-      height: 40px;
-      width: auto;
-      object-fit: contain;
-      margin-bottom: 5px;
-    }
+  header .logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 5px;
+  }
 
-    header .name {
-      height: 30px;
-      width: auto;
-      object-fit: contain;
-    }
+  header .name {
+    height: 30px;
+    width: auto;
+    object-fit: contain;
+  }
 
-    #buildNumber {
-      color: white;
-      text-shadow: 1px 1px 2px black;
-      margin: 5px 0;
-      font-size: 14px;
-    }
+  #buildNumber {
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    margin: 5px 0;
+    font-size: 14px;
+  }
 
-    .icons {
-      display: grid;
-      grid-template-columns: repeat(2, 120px);
-      grid-gap: 20px;
-      place-items: center;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
+  .icons {
+    display: grid;
+    grid-template-columns: repeat(2, 120px);
+    grid-gap: 20px;
+    place-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 
-    .icons img {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
+  .icons img {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
 
-    .icons img:hover {
-      transform: scale(1.1);
-    }
+  .icons img:hover {
+    transform: scale(1.1);
+  }
 
-    .cookie-screen {
-      display: none;
-      flex: 1;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
+  .screen {
+    display: none;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 
-    .cookie-image {
-      width: 180px;
-      max-width: 300px;
-      transition: transform 0.5s ease;
-      margin-bottom: 20px;
-      cursor: pointer;
-    }
+  .cookie-image, .sphere-image {
+    width: 180px;
+    max-width: 300px;
+    transition: transform 0.5s ease;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
 
-    .cookie-image.opened {
-      transform: scale(2) rotate(-5deg);
-    }
+  .cookie-image.opened {
+    transform: scale(2) rotate(-5deg);
+  }
 
-    .fortune {
-      font-size: 36px;
-      font-weight: bold;
-      color: #fff !important;
-      min-height: 80px;
-      margin-bottom: 20px;
-      padding: 0 10px;
-      text-align: center;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
+  .fortune, .sphere-text {
+    font-size: 36px;
+    font-weight: bold;
+    color: #fff !important;
+    min-height: 80px;
+    margin-bottom: 20px;
+    padding: 0 10px;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
 
-    .fortune.show {
-      opacity: 1;
-    }
+  .fortune.show, .sphere-text.show {
+    opacity: 1;
+  }
 
-    #reloadButton {
-      display: none;
-      background-color: transparent;
-      border: none;
-      padding: 0;
-      margin-top: 10px;
-    }
+  #reloadButton {
+    display: none;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    margin-top: 10px;
+  }
 
-    #reloadButton img {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-      cursor: pointer;
-    }
+  #reloadButton img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    cursor: pointer;
+  }
 
-    #backButton {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      width: 40px;
-      height: 40px;
-      background: none;
-      border: none;
-      padding: 0;
-      display: none;
-      z-index: 2000;
-    }
+  #backButton {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    padding: 0;
+    display: none;
+    z-index: 2000;
+  }
 
-    #backButton img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      cursor: pointer;
-    }
+  #backButton img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: pointer;
+  }
 
-    @media (max-width: 350px) {
-      .cookie-image {
-        width: 150px;
-      }
-      .fortune {
-        font-size: 28px;
-        min-height: 70px;
-      }
+  @media (max-width: 350px) {
+    .cookie-image, .sphere-image {
+      width: 150px;
     }
-  </style>
+    .fortune, .sphere-text {
+      font-size: 28px;
+      min-height: 70px;
+    }
+  }
+</style>
 </head>
 <body>
 
 <header>
   <img src="logo.png" alt="Логотип" class="logo">
   <img src="name.png" alt="Название" class="name">
-  <p id="buildNumber">Сборка 2</p>
+  <p id="buildNumber">Сборка 3</p>
 </header>
 
 <!-- Главный экран -->
 <div class="icons" id="mainScreen">
-  <img src="sphere.png" alt="Шар">
+  <img src="sphere.png" alt="Шар" onclick="showSphereScreen()">
   <img src="cookie.png" alt="Печенье" onclick="showCookieScreen()">
   <img src="tarot.png" alt="Таро">
   <img src="zodiac.png" alt="Зодиак">
 </div>
 
 <!-- Экран с печеньем -->
-<div class="cookie-screen" id="cookieScreen">
+<div class="screen" id="cookieScreen">
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
   <div class="fortune" id="fortune"></div>
   <button id="reloadButton" onclick="reloadCookie()">
     <img src="reload.png" alt="Перезагрузить">
   </button>
+</div>
+
+<!-- Экран со сферой -->
+<div class="screen" id="sphereScreen">
+  <img src="sphere.png" alt="Сфера" class="sphere-image">
+  <div class="sphere-text" id="sphereText"></div>
 </div>
 
 <!-- Кнопка назад -->
@@ -188,60 +193,116 @@
 </button>
 
 <script>
-  let predictions = [];
+let predictions = [];
+let spherePredictions = [];
 
-  // Загружаем предсказания из внешнего JSON
-  fetch('predictions.json')
-    .then(res => res.json())
-    .then(data => predictions = data)
-    .catch(err => console.error('Ошибка загрузки JSON:', err));
+// Загружаем предсказания печенья
+fetch('predictions.json')
+  .then(res => res.json())
+  .then(data => predictions = data)
+  .catch(err => console.error('Ошибка загрузки JSON:', err));
 
-  const mainScreen = document.getElementById("mainScreen");
-  const cookieScreen = document.getElementById("cookieScreen");
-  const cookieImg = document.getElementById("cookieImage");
-  const fortune = document.getElementById("fortune");
-  const reloadBtn = document.getElementById("reloadButton");
-  const backBtn = document.getElementById("backButton");
+// Загружаем предсказания сферы
+fetch('sphere_predictions.json')
+  .then(res => res.json())
+  .then(data => spherePredictions = data)
+  .catch(err => console.error('Ошибка загрузки JSON для сферы:', err));
 
-  function showCookieScreen() {
-    mainScreen.style.display = "none";
-    cookieScreen.style.display = "flex";
-    backBtn.style.display = "block";
+const mainScreen = document.getElementById("mainScreen");
+const cookieScreen = document.getElementById("cookieScreen");
+const sphereScreen = document.getElementById("sphereScreen");
+const cookieImg = document.getElementById("cookieImage");
+const fortune = document.getElementById("fortune");
+const reloadBtn = document.getElementById("reloadButton");
+const backBtn = document.getElementById("backButton");
+const sphereText = document.getElementById("sphereText");
+
+// Экран печенья
+function showCookieScreen() {
+  mainScreen.style.display = "none";
+  cookieScreen.style.display = "flex";
+  backBtn.style.display = "block";
+}
+
+function openCookie() {
+  if (!cookieImg.classList.contains("opened")) {
+    cookieImg.src = "cookie_open.png";
+    cookieImg.classList.add("opened");
+
+    if (predictions.length > 0) {
+      const randomIndex = Math.floor(Math.random() * predictions.length);
+      fortune.textContent = predictions[randomIndex];
+      setTimeout(() => fortune.classList.add("show"), 100);
+    } else {
+      fortune.textContent = "Предсказание недоступно";
+      fortune.classList.add("show");
+    }
+    reloadBtn.style.display = "inline-block";
   }
+}
 
-  function goBack() {
-    cookieScreen.style.display = "none";
-    backBtn.style.display = "none";
-    mainScreen.style.display = "grid";
-    resetCookie();
-  }
+function reloadCookie() {
+  cookieImg.src = "cookie_closed.png";
+  cookieImg.classList.remove("opened");
+  fortune.classList.remove("show");
+  fortune.textContent = "";
+  reloadBtn.style.display = "none";
+}
 
-  function openCookie() {
-    if (!cookieImg.classList.contains("opened")) {
-      cookieImg.src = "cookie_open.png";
-      cookieImg.classList.add("opened");
+// Экран сферы
+function showSphereScreen() {
+  mainScreen.style.display = "none";
+  sphereScreen.style.display = "flex";
+  backBtn.style.display = "block";
+  sphereText.textContent = '';
+  sphereText.classList.remove("show");
+}
 
-      if (predictions.length > 0) {
-        const randomIndex = Math.floor(Math.random() * predictions.length);
-        fortune.textContent = predictions[randomIndex];
-        setTimeout(() => fortune.classList.add("show"), 100);
-      } else {
-        fortune.textContent = "Предсказание недоступно";
-        fortune.classList.add("show");
-      }
+// Кнопка назад
+function goBack() {
+  cookieScreen.style.display = "none";
+  sphereScreen.style.display = "none";
+  backBtn.style.display = "none";
+  mainScreen.style.display = "grid";
+  resetCookie();
+}
 
-      reloadBtn.style.display = "inline-block";
+function resetCookie() {
+  cookieImg.src = "cookie_closed.png";
+  cookieImg.classList.remove("opened");
+  fortune.classList.remove("show");
+  fortune.textContent = "";
+  reloadBtn.style.display = "none";
+}
+
+// Обработка тряски только для сферы
+let lastTime = new Date();
+window.addEventListener('devicemotion', (event) => {
+  if (sphereScreen.style.display !== 'flex') return; // только на экране сферы
+
+  const acceleration = event.accelerationIncludingGravity;
+  const currentTime = new Date();
+  const diffTime = currentTime - lastTime;
+
+  if (diffTime > 500) {
+    lastTime = currentTime;
+    const speed = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
+    if (speed > 25) {
+      showSpherePrediction();
     }
   }
+});
 
-  function reloadCookie() {
-    cookieImg.src = "cookie_closed.png";
-    cookieImg.classList.remove("opened");
-    fortune.classList.remove("show");
-    fortune.textContent = "";
-    reloadBtn.style.display = "none";
+function showSpherePrediction() {
+  if (spherePredictions.length > 0) {
+    const randomIndex = Math.floor(Math.random() * spherePredictions.length);
+    sphereText.textContent = spherePredictions[randomIndex];
+    sphereText.classList.add("show");
+  } else {
+    sphereText.textContent = "Предсказание недоступно";
+    sphereText.classList.add("show");
   }
+}
 </script>
-
 </body>
 </html>
