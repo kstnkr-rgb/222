@@ -43,6 +43,13 @@
       object-fit: contain;
     }
 
+    #buildNumber {
+      color: white;
+      text-shadow: 1px 1px 2px black;
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
     .icons {
       display: grid;
       grid-template-columns: repeat(2, 120px);
@@ -84,7 +91,7 @@
     }
 
     .cookie-image.opened {
-      transform: scale(2) rotate(-5deg); /* в 2 раза больше */
+      transform: scale(2) rotate(-5deg);
     }
 
     .fortune {
@@ -155,6 +162,7 @@
 <header>
   <img src="logo.png" alt="Логотип" class="logo">
   <img src="name.png" alt="Название" class="name">
+  <p id="buildNumber">Сборка 1</p>
 </header>
 
 <!-- Главный экран -->
@@ -174,4 +182,94 @@
   </button>
 </div>
 
-<!--
+<!-- Кнопка назад -->
+<button id="backButton" onclick="goBack()">
+  <img src="back.png" alt="Назад">
+</button>
+
+<script>
+  let predictions = [];
+  let lastTime = new Date();
+
+  // Загружаем предсказания из внешнего JSON
+  fetch('predictions.json')
+    .then(res => res.json())
+    .then(data => predictions = data)
+    .catch(err => console.error('Ошибка загрузки JSON:', err));
+
+  const mainScreen = document.getElementById("mainScreen");
+  const cookieScreen = document.getElementById("cookieScreen");
+  const cookieImg = document.getElementById("cookieImage");
+  const fortune = document.getElementById("fortune");
+  const reloadBtn = document.getElementById("reloadButton");
+  const backBtn = document.getElementById("backButton");
+
+  function showCookieScreen() {
+    mainScreen.style.display = "none";
+    cookieScreen.style.display = "flex";
+    backBtn.style.display = "block";
+  }
+
+  function goBack() {
+    cookieScreen.style.display = "none";
+    backBtn.style.display = "none";
+    mainScreen.style.display = "grid";
+    resetCookie();
+  }
+
+  function openCookie() {
+    if (!cookieImg.classList.contains("opened")) {
+      cookieImg.src = "cookie_open.png";
+      cookieImg.classList.add("opened");
+
+      if (predictions.length > 0) {
+        const randomIndex = Math.floor(Math.random() * predictions.length);
+        fortune.textContent = predictions[randomIndex];
+        setTimeout(() => fortune.classList.add("show"), 100);
+      } else {
+        fortune.textContent = "Предсказание недоступно";
+        fortune.classList.add("show");
+      }
+
+      reloadBtn.style.display = "inline-block";
+    }
+  }
+
+  function reloadCookie() {
+    cookieImg.src = "cookie_closed.png";
+    cookieImg.classList.remove("opened");
+    fortune.classList.remove("show");
+    fortune.textContent = "";
+    reloadBtn.style.display = "none";
+  }
+
+  // Обработка тряски телефона
+  window.addEventListener('devicemotion', (event) => {
+    const acceleration = event.accelerationIncludingGravity;
+    const currentTime = new Date();
+    const diffTime = currentTime - lastTime;
+
+    if (diffTime > 500) {
+      lastTime = currentTime;
+      const speed = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
+      if (speed > 25) openCookie();
+    }
+  });
+
+  // Для iOS запрос разрешения на сенсоры
+  function requestPermission() {
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+      DeviceMotionEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === 'granted') {
+            console.log('Доступ к сенсорам разрешён');
+          }
+        })
+        .catch(console.error);
+    }
+  }
+  document.body.addEventListener('click', requestPermission, { once: true });
+</script>
+
+</body>
+</html>
