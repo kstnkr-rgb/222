@@ -6,55 +6,81 @@
   <title>🍪 Печенье с предсказанием</title>
   <style>
     body {
-      font-family: sans-serif;
-      text-align: center;
       margin: 0;
       padding: 20px;
-      background: #fff8f0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff8f0;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      flex-direction: column;
+      text-align: center;
     }
-    img {
-      max-width: 80%;
-      height: auto;
-      border-radius: 12px;
+
+    h1 {
+      font-size: 24px;
       margin-bottom: 20px;
-      transition: transform 0.3s;
+      color: #444;
     }
+
+    .cookie-image {
+      width: 80%;
+      max-width: 250px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      transition: transform 0.3s ease;
+    }
+
+    .fortune {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      min-height: 40px;
+      margin-bottom: 15px;
+    }
+
     button {
       padding: 12px 24px;
       font-size: 18px;
-      cursor: pointer;
-      border-radius: 12px;
+      font-weight: bold;
       border: none;
+      border-radius: 12px;
+      cursor: pointer;
       background-color: #ff914d;
       color: white;
-      font-weight: bold;
-      width: 80%;
-      max-width: 300px;
       transition: background 0.3s;
     }
+
     button:hover {
       background-color: #ff6a00;
     }
-    .fortune {
-      margin-top: 20px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #333;
-      max-width: 90%;
+
+    #reloadButton {
+      display: none;
+      background-color: transparent;
+      padding: 0;
+    }
+
+    #reloadButton img {
+      width: 50px;
+      height: 50px;
     }
   </style>
 </head>
 <body>
 
-  <h1>🍪 Печенье с предсказанием</h1>
-  <img id="cookieImage" src="cookie_closed.png" alt="Печенье">
-  <button onclick="showFortune()">Открыть печенье</button>
+  <h1>🍪 Оракул</h1>
+
+  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
+
   <div class="fortune" id="fortune"></div>
+
+  <button id="openButton" onclick="openCookie()">Открыть печенье</button>
+
+  <button id="reloadButton" onclick="reloadCookie()">
+    <img src="reload.png" alt="Перезагрузить">
+  </button>
 
   <script>
     const predictions = [
@@ -66,13 +92,29 @@
       // сюда можно вставить все 100 предсказаний
     ];
 
-    function showFortune() {
+    function openCookie() {
       // Меняем картинку на открытую
       document.getElementById("cookieImage").src = "cookie_open.png";
-      
-      // Выбираем случайное предсказание
+
+      // Показываем случайное предсказание
       const randomIndex = Math.floor(Math.random() * predictions.length);
       document.getElementById("fortune").textContent = predictions[randomIndex];
+
+      // Скрываем кнопку открытия и показываем кнопку перезагрузки
+      document.getElementById("openButton").style.display = "none";
+      document.getElementById("reloadButton").style.display = "inline-block";
+    }
+
+    function reloadCookie() {
+      // Меняем картинку обратно на закрытую
+      document.getElementById("cookieImage").src = "cookie_closed.png";
+
+      // Скрываем предсказание
+      document.getElementById("fortune").textContent = "";
+
+      // Показываем кнопку открытия и скрываем кнопку перезагрузки
+      document.getElementById("openButton").style.display = "inline-block";
+      document.getElementById("reloadButton").style.display = "none";
     }
   </script>
 
