@@ -162,7 +162,7 @@
 <header>
   <img src="logo.png" alt="Логотип" class="logo">
   <img src="name.png" alt="Название" class="name">
-  <p id="buildNumber">Сборка 1</p>
+  <p id="buildNumber">Сборка 2</p>
 </header>
 
 <!-- Главный экран -->
@@ -189,7 +189,6 @@
 
 <script>
   let predictions = [];
-  let lastTime = new Date();
 
   // Загружаем предсказания из внешнего JSON
   fetch('predictions.json')
@@ -242,33 +241,6 @@
     fortune.textContent = "";
     reloadBtn.style.display = "none";
   }
-
-  // Обработка тряски телефона
-  window.addEventListener('devicemotion', (event) => {
-    const acceleration = event.accelerationIncludingGravity;
-    const currentTime = new Date();
-    const diffTime = currentTime - lastTime;
-
-    if (diffTime > 500) {
-      lastTime = currentTime;
-      const speed = Math.abs(acceleration.x) + Math.abs(acceleration.y) + Math.abs(acceleration.z);
-      if (speed > 25) openCookie();
-    }
-  });
-
-  // Для iOS запрос разрешения на сенсоры
-  function requestPermission() {
-    if (typeof DeviceMotionEvent.requestPermission === 'function') {
-      DeviceMotionEvent.requestPermission()
-        .then(permissionState => {
-          if (permissionState === 'granted') {
-            console.log('Доступ к сенсорам разрешён');
-          }
-        })
-        .catch(console.error);
-    }
-  }
-  document.body.addEventListener('click', requestPermission, { once: true });
 </script>
 
 </body>
