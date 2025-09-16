@@ -10,13 +10,11 @@
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
       height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       background-image: url('background.png');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      overflow: hidden;
     }
 
     header {
@@ -27,24 +25,27 @@
     header .logo {
       display: block;
       margin: 0 auto 10px;
-      width: 120px;   /* фиксируем размер лого */
+      width: 120px;
       height: auto;
     }
 
     header .name {
       display: block;
       margin: 0 auto;
-      width: 180px;   /* фиксируем размер названия */
+      width: 180px;
       height: auto;
     }
 
+    /* --- Главный экран с 4 иконками --- */
     .icons {
-      flex: 1;
       display: grid;
       grid-template-columns: repeat(2, 120px);
       grid-gap: 20px;
-      align-content: center;
-      justify-content: center;
+      place-items: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
 
     .icons img {
@@ -59,6 +60,7 @@
       transform: scale(1.1);
     }
 
+    /* --- Экран с печеньем --- */
     .cookie-screen {
       display: none;
       flex: 1;
@@ -138,6 +140,7 @@
       object-fit: contain;
     }
 
+    /* --- Кнопка Назад --- */
     #backButton {
       position: fixed;
       top: 15px;
@@ -150,7 +153,7 @@
     }
 
     #backButton img {
-      width: 40px;   /* уменьшаем иконку */
+      width: 40px;
       height: 40px;
       object-fit: contain;
       display: block;
