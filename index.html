@@ -17,30 +17,32 @@
       align-items: center;
       min-height: 100vh;
     }
-    h1 {
-      font-size: clamp(20px, 5vw, 36px);
-      margin-bottom: 30px;
-      color: #444;
+    img {
+      max-width: 80%;
+      height: auto;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      transition: transform 0.3s;
     }
     button {
       padding: 12px 24px;
-      font-size: clamp(16px, 4vw, 22px);
+      font-size: 18px;
       cursor: pointer;
       border-radius: 12px;
       border: none;
       background-color: #ff914d;
       color: white;
       font-weight: bold;
-      transition: background 0.3s;
       width: 80%;
       max-width: 300px;
+      transition: background 0.3s;
     }
     button:hover {
       background-color: #ff6a00;
     }
     .fortune {
-      margin-top: 40px;
-      font-size: clamp(18px, 4vw, 26px);
+      margin-top: 20px;
+      font-size: 20px;
       font-weight: bold;
       color: #333;
       max-width: 90%;
@@ -48,7 +50,9 @@
   </style>
 </head>
 <body>
+
   <h1>🍪 Печенье с предсказанием</h1>
+  <img id="cookieImage" src="cookie_closed.png" alt="Печенье">
   <button onclick="showFortune()">Открыть печенье</button>
   <div class="fortune" id="fortune"></div>
 
@@ -58,19 +62,19 @@
       "Неожиданная встреча изменит твои планы к лучшему.",
       "Верь в себя — и успех придёт быстрее, чем думаешь.",
       "Сегодняшний день подарит маленькое чудо.",
-      "Скоро к тебе вернётся давняя мечта.",
-      "Кто-то вспомнит о тебе с добром и напишет первым.",
-      "Новый проект принесёт радость и признание.",
-      "Счастье уже в пути, будь готов его встретить.",
-      "Ты получишь ответ на вопрос, который давно волнует.",
-      "Вскоре появится возможность проявить себя."
+      "Скоро к тебе вернётся давняя мечта."
       // сюда можно вставить все 100 предсказаний
     ];
 
     function showFortune() {
+      // Меняем картинку на открытую
+      document.getElementById("cookieImage").src = "cookie_open.png";
+      
+      // Выбираем случайное предсказание
       const randomIndex = Math.floor(Math.random() * predictions.length);
       document.getElementById("fortune").textContent = predictions[randomIndex];
     }
   </script>
+
 </body>
 </html>
