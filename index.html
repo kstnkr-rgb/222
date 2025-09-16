@@ -53,10 +53,11 @@
       max-width: 200px;
       margin: 20px auto;
       cursor: pointer;
-      transition: transform 0.3s ease;
+      transition: transform 0.5s ease, max-width 0.5s ease;
     }
     #cookie.opened {
       max-width: 400px; /* в 2 раза больше */
+      transform: scale(1.1); /* лёгкое увеличение для эффекта */
     }
     #prediction {
       font-size: 24px;
