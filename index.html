@@ -14,7 +14,7 @@
       flex-direction: column;
       align-items: center;
 
-      /* Фоновая картинка */
+      /* Фон */
       background-image: url('background.png');
       background-size: cover;
       background-position: center;
@@ -23,10 +23,157 @@
 
     header {
       position: fixed;
-      top: 20px;   /* немного отступ сверху */
+      top: 20px;
       width: 100%;
       text-align: center;
       font-size: 28px;
       font-weight: bold;
       color: #fff;
       z-index: 1000;
+      pointer-events: none;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .cookie-image {
+      width: 180px;
+      max-width: 250px;
+      transition: transform 0.5s ease;
+      margin-bottom: 20px;
+    }
+
+    .cookie-image.opened {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .fortune {
+      font-size: 18px;
+      font-weight: bold;
+      color: #fff;
+      min-height: 40px;
+      margin-bottom: 20px;
+      padding: 0 10px;
+      text-align: center;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .fortune.show {
+      opacity: 1;
+    }
+
+    button {
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      background-color: #ff914d;
+      color: white;
+      transition: background 0.3s;
+      margin-bottom: 10px;
+      width: 80%;
+      max-width: 200px;
+    }
+
+    button:hover {
+      background-color: #ff6a00;
+    }
+
+    #reloadButton {
+      display: none;
+      background-color: transparent;
+      padding: 0;
+      border: none;
+    }
+
+    #reloadButton img {
+      width: 50px;
+      height: 50px;
+    }
+
+    @media (max-width: 350px) {
+      .cookie-image {
+        width: 150px;
+      }
+      button {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>Оракул</header>
+
+  <div class="container">
+    <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
+
+    <div class="fortune" id="fortune"></div>
+
+    <button id="openButton" onclick="openCookie()">Открыть печенье</button>
+
+    <button id="reloadButton" onclick="reloadCookie()">
+      <img src="reload.png" alt="Перезагрузить">
+    </button>
+  </div>
+
+  <script>
+    const predictions = [
+      "Завтра принесёт шанс, которого ты ждал.",
+      "Неожиданная встреча изменит твои планы к лучшему.",
+      "Верь в себя — и успех придёт быстрее, чем думаешь.",
+      "Сегодняшний день подарит маленькое чудо.",
+      "Скоро к тебе вернётся давняя мечта."
+      // сюда можно вставить все 100 предсказаний
+    ];
+
+    function openCookie() {
+      const cookieImg = document.getElementById("cookieImage");
+      const fortune = document.getElementById("fortune");
+
+      // меняем картинку на открытую и добавляем класс для анимации
+      cookieImg.src = "cookie_open.png";
+      cookieImg.classList.add("opened");
+
+      // случайное предсказание
+      const randomIndex = Math.floor(Math.random() * predictions.length);
+      fortune.textContent = predictions[randomIndex];
+
+      // анимация появления текста
+      setTimeout(() => {
+        fortune.classList.add("show");
+      }, 100); // задержка для плавности
+
+      // переключение кнопок
+      document.getElementById("openButton").style.display = "none";
+      document.getElementById("reloadButton").style.display = "inline-block";
+    }
+
+    function reloadCookie() {
+      const cookieImg = document.getElementById("cookieImage");
+      const fortune = document.getElementById("fortune");
+
+      cookieImg.src = "cookie_closed.png";
+      cookieImg.classList.remove("opened");
+
+      fortune.classList.remove("show");
+      fortune.textContent = "";
+
+      document.getElementById("openButton").style.display = "inline-block";
+      document.getElementById("reloadButton").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
