@@ -108,6 +108,7 @@ header .name {
   overflow-y: auto;
   opacity: 0;
   transition: opacity 0.8s ease;
+  white-space: pre-wrap; /* чтобы переносы \n работали */
 }
 
 .fortune.show, .sphere-text.show, .tarot-text.show {
@@ -185,7 +186,7 @@ header .name {
 <header>
   <img src="logo.png" alt="Логотип" class="logo">
   <img src="name.png" alt="Название" class="name">
-  <p id="buildNumber">Сборка 8</p>
+  <p id="buildNumber">Сборка 9</p>
 </header>
 
 <!-- Главный экран -->
@@ -237,7 +238,6 @@ let predictions = [];
 let spherePredictions = [];
 let tarotPredictions = [];
 
-// Загрузка JSON
 fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data).catch(err=>console.error(err));
 fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data).catch(err=>console.error(err));
 fetch('tarot_predictions.json').then(res=>res.json()).then(data=>tarotPredictions=data).catch(err=>console.error(err));
@@ -252,6 +252,8 @@ const reloadBtn = document.getElementById("reloadButton");
 const backBtn = document.getElementById("backButton");
 const sphereText = document.getElementById("sphereText");
 const tarotText = document.getElementById("tarotText");
+
+let openedCards = 0;
 
 // Печенье
 function showCookieScreen() { mainScreen.style.display="none"; cookieScreen.style.display="flex"; backBtn.style.display="block";}
@@ -270,7 +272,13 @@ function reloadCookie() { cookieImg.src="cookie_closed.png"; cookieImg.classList
 function showSphereScreen(){ mainScreen.style.display="none"; sphereScreen.style.display="flex"; backBtn.style.display="block"; sphereText.textContent=''; sphereText.classList.remove("show"); }
 
 // Таро
-function showTarotScreen(){ mainScreen.style.display="none"; tarotScreen.style.display="flex"; backBtn.style.display="block"; tarotText.textContent=''; tarotText.classList.remove("show"); 
+function showTarotScreen(){
+  mainScreen.style.display="none";
+  tarotScreen.style.display="flex";
+  backBtn.style.display="block";
+  tarotText.textContent='';
+  tarotText.classList.remove("show");
+  openedCards = 0;
   const cards = document.querySelectorAll(".tarot-card-container img");
   cards.forEach(card => card.src="close.png");
 }
@@ -283,14 +291,15 @@ function openTarotCard(container, num){
   const cardImg = container.querySelector("img");
   if(cardImg.src.includes("close.png")){
     cardImg.src = `open${num}.png`;
+    openedCards++;
     
-    // Берём правильный текст из JSON
-    if(tarotPredictions.length){
-      const prediction = tarotPredictions[Math.floor(Math.random()*tarotPredictions.length)];
-      tarotText.textContent = prediction.text; // <-- Важно .text
-      tarotText.classList.add("show");
-    } else {
-      tarotText.textContent = "Толкование недоступно";
+    if(openedCards === 3){
+      if(tarotPredictions.length){
+        const textAll = tarotPredictions.map(p => p.text).join("\n\n");
+        tarotText.textContent = textAll;
+      } else {
+        tarotText.textContent = "Толкование недоступно";
+      }
       tarotText.classList.add("show");
     }
   }
