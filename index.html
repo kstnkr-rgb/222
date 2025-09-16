@@ -3,25 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🍪 Печенье с предсказанием</title>
+  <title>Оракул</title>
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #fff8f0;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      flex-direction: column;
-      text-align: center;
+
+      /* Фоновая картинка */
+      background-image: url('background.png');
+      background-size: cover;       /* адаптация под экран */
+      background-position: center;  /* центрируем */
+      background-repeat: no-repeat;
     }
 
-    h1 {
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      background-color: rgba(255, 248, 240, 0.9); /* слегка прозрачный фон */
+      padding: 15px 0;
       font-size: 24px;
-      margin-bottom: 20px;
+      font-weight: bold;
       color: #444;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      margin-top: 80px; /* отступ под фиксированный header */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .cookie-image {
@@ -38,6 +57,8 @@
       color: #333;
       min-height: 40px;
       margin-bottom: 15px;
+      text-align: center;
+      padding: 0 10px;
     }
 
     button {
@@ -50,6 +71,9 @@
       background-color: #ff914d;
       color: white;
       transition: background 0.3s;
+      margin-bottom: 10px;
+      width: 80%;
+      max-width: 200px;
     }
 
     button:hover {
@@ -60,27 +84,40 @@
       display: none;
       background-color: transparent;
       padding: 0;
+      border: none;
     }
 
     #reloadButton img {
       width: 50px;
       height: 50px;
     }
+
+    /* Адаптивность для маленьких экранов */
+    @media (max-width: 350px) {
+      .cookie-image {
+        width: 90%;
+      }
+      button {
+        width: 90%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <h1>🍪 Оракул</h1>
+  <header>Оракул</header>
 
-  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
+  <div class="container">
+    <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
 
-  <div class="fortune" id="fortune"></div>
+    <div class="fortune" id="fortune"></div>
 
-  <button id="openButton" onclick="openCookie()">Открыть печенье</button>
+    <button id="openButton" onclick="openCookie()">Открыть печенье</button>
 
-  <button id="reloadButton" onclick="reloadCookie()">
-    <img src="reload.png" alt="Перезагрузить">
-  </button>
+    <button id="reloadButton" onclick="reloadCookie()">
+      <img src="reload.png" alt="Перезагрузить">
+    </button>
+  </div>
 
   <script>
     const predictions = [
@@ -93,26 +130,16 @@
     ];
 
     function openCookie() {
-      // Меняем картинку на открытую
       document.getElementById("cookieImage").src = "cookie_open.png";
-
-      // Показываем случайное предсказание
       const randomIndex = Math.floor(Math.random() * predictions.length);
       document.getElementById("fortune").textContent = predictions[randomIndex];
-
-      // Скрываем кнопку открытия и показываем кнопку перезагрузки
       document.getElementById("openButton").style.display = "none";
       document.getElementById("reloadButton").style.display = "inline-block";
     }
 
     function reloadCookie() {
-      // Меняем картинку обратно на закрытую
       document.getElementById("cookieImage").src = "cookie_closed.png";
-
-      // Скрываем предсказание
       document.getElementById("fortune").textContent = "";
-
-      // Показываем кнопку открытия и скрываем кнопку перезагрузки
       document.getElementById("openButton").style.display = "inline-block";
       document.getElementById("reloadButton").style.display = "none";
     }
