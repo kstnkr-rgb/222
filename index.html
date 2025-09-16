@@ -8,236 +8,156 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-image: url('background.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    header {
-      margin-top: 20px;
+      font-family: Arial, sans-serif;
       text-align: center;
+      background: url('background.png') no-repeat center center fixed;
+      background-size: cover;
     }
-
-    header img {
+    #logo, #name {
       display: block;
-      margin: 0 auto 10px;
-      max-width: 120px;
+      margin: 10px auto;
+      max-width: 150px;
       height: auto;
     }
-
-    .icons {
-      flex: 1;
-      display: grid;
-      grid-template-columns: repeat(2, 120px);
-      grid-gap: 20px;
-      align-content: center;
-      justify-content: center;
+    #main-menu, #cookie-screen {
+      display: none;
     }
-
-    .icons img {
+    #main-menu.active, #cookie-screen.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .icon-grid {
+      display: grid;
+      grid-template-columns: 120px 120px;
+      grid-gap: 20px;
+      justify-content: center;
+      align-items: center;
+    }
+    .icon-grid img {
       width: 120px;
       height: 120px;
-      object-fit: contain;
       cursor: pointer;
-      transition: transform 0.3s;
     }
-
-    .icons img:hover {
-      transform: scale(1.1);
-    }
-
-    .cookie-screen {
-      display: none;
-      flex: 1;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .cookie-image {
-      width: 180px;
-      transition: transform 0.5s ease;
-      margin-bottom: 20px;
-    }
-
-    .cookie-image.opened {
-      transform: scale(1.1) rotate(-5deg);
-    }
-
-    .fortune {
-      font-size: 36px;
-      font-weight: bold;
-      color: #fff;
-      min-height: 80px;
-      margin-bottom: 20px;
-      padding: 0 10px;
-      text-align: center;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
-
-    .fortune.show {
-      opacity: 1;
-    }
-
-    .button-wrapper {
-      position: relative;
-      width: 200px;
-      height: 60px;
-      margin-bottom: 10px;
-    }
-
-    .button-wrapper button {
+    #back-btn {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s;
-      border: none;
-      outline: none;
-    }
-
-    #openButton {
-      background-color: #ff914d;
-      color: white;
-    }
-
-    #openButton:hover {
-      background-color: #ff6a00;
-    }
-
-    #reloadButton {
-      display: none;
-      background-color: transparent;
-      padding: 0;
-    }
-
-    #reloadButton img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    #backButton {
-      position: fixed;
       top: 15px;
       left: 15px;
-      width: 50px;
-      height: 50px;
-      background: transparent;
-      border: none;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+    }
+    #cookie {
+      max-width: 200px;
+      margin: 20px auto;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    #cookie.opened {
+      max-width: 400px; /* в 2 раза больше */
+    }
+    #prediction {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: white;
+      text-shadow: 1px 1px 3px black;
+    }
+    #reload-btn {
+      margin-top: 20px;
+      width: 40px;
+      height: 40px;
       cursor: pointer;
       display: none;
-      z-index: 2000;
-    }
-
-    #backButton img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
     }
   </style>
 </head>
 <body>
+  <img id="logo" src="logo.png" alt="Логотип">
+  <img id="name" src="name.png" alt="Название">
 
-<header>
-  <img src="logo.png" alt="Логотип">
-  <img src="name.png" alt="Название">
-</header>
-
-<!-- Главный экран -->
-<div class="icons" id="mainScreen">
-  <img src="sphere.png" alt="Сфера">
-  <img src="cookie.png" alt="Печенье" onclick="showCookieScreen()">
-  <img src="tarot.png" alt="Таро">
-  <img src="zodiac.png" alt="Зодиак">
-</div>
-
-<!-- Экран с печеньем -->
-<div class="cookie-screen" id="cookieScreen">
-  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
-  <div class="fortune" id="fortune"></div>
-
-  <div class="button-wrapper">
-    <button id="openButton" onclick="openCookie()">Открыть печенье</button>
-    <button id="reloadButton" onclick="reloadCookie()">
-      <img src="reload.png" alt="Перезагрузить">
-    </button>
+  <!-- Главное меню -->
+  <div id="main-menu" class="active">
+    <div class="icon-grid">
+      <img src="sphere.png" alt="Сфера">
+      <img id="cookie-btn" src="cookie.png" alt="Печенье">
+      <img src="tarot.png" alt="Таро">
+      <img src="zodiac.png" alt="Зодиак">
+    </div>
   </div>
-</div>
 
-<!-- Кнопка назад -->
-<button id="backButton" onclick="goBack()">
-  <img src="back.png" alt="Назад">
-</button>
+  <!-- Экран с печеньем -->
+  <div id="cookie-screen">
+    <img id="back-btn" src="back.png" alt="Назад">
+    <img id="cookie" src="cookie_closed.png" alt="Печенье">
+    <p id="prediction"></p>
+    <img id="reload-btn" src="reload.png" alt="Перезапуск">
+  </div>
 
-<script>
-  let predictions = [];
+  <script>
+    const mainMenu = document.getElementById('main-menu');
+    const cookieScreen = document.getElementById('cookie-screen');
+    const cookieBtn = document.getElementById('cookie-btn');
+    const backBtn = document.getElementById('back-btn');
+    const cookie = document.getElementById('cookie');
+    const prediction = document.getElementById('prediction');
+    const reloadBtn = document.getElementById('reload-btn');
 
-  fetch('predictions.json')
-    .then(res => res.json())
-    .then(data => predictions = data)
-    .catch(err => console.error('Ошибка загрузки JSON:', err));
+    let predictions = [];
 
-  function showCookieScreen() {
-    document.getElementById("mainScreen").style.display = "none";
-    document.getElementById("cookieScreen").style.display = "flex";
-    document.getElementById("backButton").style.display = "block";
-  }
+    // Загружаем предсказания из JSON
+    fetch('predictions.json')
+      .then(res => res.json())
+      .then(data => predictions = data)
+      .catch(err => console.error('Ошибка загрузки предсказаний:', err));
 
-  function goBack() {
-    document.getElementById("mainScreen").style.display = "grid";
-    document.getElementById("cookieScreen").style.display = "none";
-    document.getElementById("backButton").style.display = "none";
-    reloadCookie();
-  }
+    // Открытие экрана с печеньем
+    cookieBtn.addEventListener('click', () => {
+      mainMenu.classList.remove('active');
+      cookieScreen.classList.add('active');
+    });
 
-  function openCookie() {
-    const cookieImg = document.getElementById("cookieImage");
-    const fortune = document.getElementById("fortune");
+    // Возврат на главный экран
+    backBtn.addEventListener('click', () => {
+      cookieScreen.classList.remove('active');
+      mainMenu.classList.add('active');
+      resetCookie();
+    });
 
-    cookieImg.src = "cookie_open.png";
-    cookieImg.classList.add("opened");
+    // Клик по печенью = открытие
+    cookie.addEventListener('click', () => {
+      if (!cookie.classList.contains('opened')) {
+        cookie.src = 'cookie_open.png';
+        cookie.classList.add('opened');
+        showPrediction();
+        reloadBtn.style.display = 'block';
+      }
+    });
 
-    if (predictions.length > 0) {
-      const randomIndex = Math.floor(Math.random() * predictions.length);
-      fortune.textContent = predictions[randomIndex];
-      setTimeout(() => fortune.classList.add("show"), 100);
-    } else {
-      fortune.textContent = "Предсказание недоступно";
-      fortune.classList.add("show");
+    // Кнопка перезапуска
+    reloadBtn.addEventListener('click', () => {
+      resetCookie();
+    });
+
+    // Сброс состояния печенья
+    function resetCookie() {
+      cookie.src = 'cookie_closed.png';
+      cookie.classList.remove('opened');
+      prediction.textContent = '';
+      reloadBtn.style.display = 'none';
     }
 
-    document.getElementById("openButton").style.display = "none";
-    document.getElementById("reloadButton").style.display = "inline-block";
-  }
-
-  function reloadCookie() {
-    const cookieImg = document.getElementById("cookieImage");
-    const fortune = document.getElementById("fortune");
-
-    cookieImg.src = "cookie_closed.png";
-    cookieImg.classList.remove("opened");
-    fortune.classList.remove("show");
-    fortune.textContent = "";
-
-    document.getElementById("openButton").style.display = "inline-block";
-    document.getElementById("reloadButton").style.display = "none";
-  }
-</script>
-
+    // Показ случайного предсказания
+    function showPrediction() {
+      if (predictions.length > 0) {
+        const randomIndex = Math.floor(Math.random() * predictions.length);
+        prediction.textContent = predictions[randomIndex];
+      } else {
+        prediction.textContent = 'Предсказание недоступно';
+      }
+    }
+  </script>
 </body>
 </html>
