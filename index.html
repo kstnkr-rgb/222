@@ -9,141 +9,24 @@
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
 
       /* Фоновая картинка */
       background-image: url('background.png');
-      background-size: cover;       /* адаптация под экран */
-      background-position: center;  /* центрируем */
+      background-size: cover;
+      background-position: center;
       background-repeat: no-repeat;
     }
 
     header {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 20px;   /* немного отступ сверху */
       width: 100%;
       text-align: center;
-      background-color: rgba(255, 248, 240, 0.9); /* слегка прозрачный фон */
-      padding: 15px 0;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
-      color: #444;
+      color: #fff;
       z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .container {
-      margin-top: 80px; /* отступ под фиксированный header */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .cookie-image {
-      width: 80%;
-      max-width: 250px;
-      border-radius: 15px;
-      margin-bottom: 15px;
-      transition: transform 0.3s ease;
-    }
-
-    .fortune {
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-      min-height: 40px;
-      margin-bottom: 15px;
-      text-align: center;
-      padding: 0 10px;
-    }
-
-    button {
-      padding: 12px 24px;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      background-color: #ff914d;
-      color: white;
-      transition: background 0.3s;
-      margin-bottom: 10px;
-      width: 80%;
-      max-width: 200px;
-    }
-
-    button:hover {
-      background-color: #ff6a00;
-    }
-
-    #reloadButton {
-      display: none;
-      background-color: transparent;
-      padding: 0;
-      border: none;
-    }
-
-    #reloadButton img {
-      width: 50px;
-      height: 50px;
-    }
-
-    /* Адаптивность для маленьких экранов */
-    @media (max-width: 350px) {
-      .cookie-image {
-        width: 90%;
-      }
-      button {
-        width: 90%;
-      }
-    }
-  </style>
-</head>
-<body>
-
-  <header>Оракул</header>
-
-  <div class="container">
-    <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
-
-    <div class="fortune" id="fortune"></div>
-
-    <button id="openButton" onclick="openCookie()">Открыть печенье</button>
-
-    <button id="reloadButton" onclick="reloadCookie()">
-      <img src="reload.png" alt="Перезагрузить">
-    </button>
-  </div>
-
-  <script>
-    const predictions = [
-      "Завтра принесёт шанс, которого ты ждал.",
-      "Неожиданная встреча изменит твои планы к лучшему.",
-      "Верь в себя — и успех придёт быстрее, чем думаешь.",
-      "Сегодняшний день подарит маленькое чудо.",
-      "Скоро к тебе вернётся давняя мечта."
-      // сюда можно вставить все 100 предсказаний
-    ];
-
-    function openCookie() {
-      document.getElementById("cookieImage").src = "cookie_open.png";
-      const randomIndex = Math.floor(Math.random() * predictions.length);
-      document.getElementById("fortune").textContent = predictions[randomIndex];
-      document.getElementById("openButton").style.display = "none";
-      document.getElementById("reloadButton").style.display = "inline-block";
-    }
-
-    function reloadCookie() {
-      document.getElementById("cookieImage").src = "cookie_closed.png";
-      document.getElementById("fortune").textContent = "";
-      document.getElementById("openButton").style.display = "inline-block";
-      document.getElementById("reloadButton").style.display = "none";
-    }
-  </script>
-
-</body>
-</html>
