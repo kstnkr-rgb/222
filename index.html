@@ -52,18 +52,17 @@
       transform: scale(1.1) rotate(-5deg);
     }
 
-    .fortune {
-      font-size: 18px;
-      font-weight: bold;
-      color: #fff;
-      min-height: 40px;
-      margin-bottom: 20px;
-      padding: 0 10px;
-      text-align: center;
-      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-      opacity: 0;
-      transition: opacity 0.8s ease;
-    }
+.fortune {
+  font-size: 36px; /* было 18px */
+  font-weight: bold;
+  min-height: 40px; /* лучше увеличить тоже, например 80px */
+  margin-bottom: 20px;
+  padding: 0 10px;
+  text-align: center;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
 
     .fortune.show {
       opacity: 1;
@@ -168,3 +167,4 @@
 
 </body>
 </html>
+
