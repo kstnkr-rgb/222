@@ -33,12 +33,13 @@
       z-index: 1000;
     }
 
-    header .logo {
-      height: 40px;       /* фиксированная высота */
-      width: auto;        /* ширина по пропорции */
-      margin-right: 10px;
-      object-fit: contain;
-    }
+header .logo {
+  height: 40px;       /* фиксируем только высоту */
+  width: auto;        /* ширина подстраивается под пропорции */
+  margin-right: 10px;
+  object-fit: contain; /* сохраняет пропорции */
+}
+
 
     .container {
       flex: 1;
