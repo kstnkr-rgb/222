@@ -13,8 +13,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-
-      /* Фон */
       background-image: url('background.png');
       background-size: cover;
       background-position: center;
@@ -114,66 +112,59 @@
 </head>
 <body>
 
-  <header>Оракул</header>
+<header>Оракул</header>
 
-  <div class="container">
-    <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
+<div class="container">
+  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье">
+  <div class="fortune" id="fortune"></div>
+  <button id="openButton" onclick="openCookie()">Открыть печенье</button>
+  <button id="reloadButton" onclick="reloadCookie()">
+    <img src="reload.png" alt="Перезагрузить">
+  </button>
+</div>
 
-    <div class="fortune" id="fortune"></div>
+<script>
+  let predictions = [];
 
-    <button id="openButton" onclick="openCookie()">Открыть печенье</button>
+  // Загружаем предсказания из внешнего JSON
+  fetch('predictions.json')
+    .then(res => res.json())
+    .then(data => predictions = data)
+    .catch(err => console.error('Ошибка загрузки JSON:', err));
 
-    <button id="reloadButton" onclick="reloadCookie()">
-      <img src="reload.png" alt="Перезагрузить">
-    </button>
-  </div>
+  function openCookie() {
+    const cookieImg = document.getElementById("cookieImage");
+    const fortune = document.getElementById("fortune");
 
-  <script>
-    const predictions = [
-      "Завтра принесёт шанс, которого ты ждал.",
-      "Неожиданная встреча изменит твои планы к лучшему.",
-      "Верь в себя — и успех придёт быстрее, чем думаешь.",
-      "Сегодняшний день подарит маленькое чудо.",
-      "Скоро к тебе вернётся давняя мечта."
-      // сюда можно вставить все 100 предсказаний
-    ];
+    cookieImg.src = "cookie_open.png";
+    cookieImg.classList.add("opened");
 
-    function openCookie() {
-      const cookieImg = document.getElementById("cookieImage");
-      const fortune = document.getElementById("fortune");
-
-      // меняем картинку на открытую и добавляем класс для анимации
-      cookieImg.src = "cookie_open.png";
-      cookieImg.classList.add("opened");
-
-      // случайное предсказание
+    if (predictions.length > 0) {
       const randomIndex = Math.floor(Math.random() * predictions.length);
       fortune.textContent = predictions[randomIndex];
-
-      // анимация появления текста
-      setTimeout(() => {
-        fortune.classList.add("show");
-      }, 100); // задержка для плавности
-
-      // переключение кнопок
-      document.getElementById("openButton").style.display = "none";
-      document.getElementById("reloadButton").style.display = "inline-block";
+      setTimeout(() => fortune.classList.add("show"), 100);
+    } else {
+      fortune.textContent = "Предсказание недоступно";
+      fortune.classList.add("show");
     }
 
-    function reloadCookie() {
-      const cookieImg = document.getElementById("cookieImage");
-      const fortune = document.getElementById("fortune");
+    document.getElementById("openButton").style.display = "none";
+    document.getElementById("reloadButton").style.display = "inline-block";
+  }
 
-      cookieImg.src = "cookie_closed.png";
-      cookieImg.classList.remove("opened");
+  function reloadCookie() {
+    const cookieImg = document.getElementById("cookieImage");
+    const fortune = document.getElementById("fortune");
 
-      fortune.classList.remove("show");
-      fortune.textContent = "";
+    cookieImg.src = "cookie_closed.png";
+    cookieImg.classList.remove("opened");
+    fortune.classList.remove("show");
+    fortune.textContent = "";
 
-      document.getElementById("openButton").style.display = "inline-block";
-      document.getElementById("reloadButton").style.display = "none";
-    }
-  </script>
+    document.getElementById("openButton").style.display = "inline-block";
+    document.getElementById("reloadButton").style.display = "none";
+  }
+</script>
 
 </body>
 </html>
