@@ -1,4 +1,4 @@
-<!-- Сборка 22 -->
+<!-- Сборка 19 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -58,9 +58,6 @@
       height: 100px;
       cursor: pointer;
     }
-    .cookie-image, .sphere-image, .tarot-card img, #zodiacDetailImg {
-      cursor: pointer;
-    }
     .cookie-image {
       width: 180px;
       max-width: 250px;
@@ -77,10 +74,6 @@
       margin-top: 20px;
       padding: 0 15px;
       max-height: 200px;
-      overflow-y: auto;
-    }
-    #zodiacText {
-      max-height: 500px;
       overflow-y: auto;
     }
     .fortune.show, .sphere-text.show, .tarot-text.show, .zodiac-text.show {
@@ -101,7 +94,8 @@
     }
     .sphere-image {
       width: 200px;
-      max-width: 200px;
+      height: 200px;
+      cursor: pointer;
     }
     .tarot-container {
       display: flex;
@@ -110,19 +104,18 @@
     }
     .tarot-card img {
       width: 100px;
+      cursor: pointer;
     }
     .zodiac-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 70px);
       grid-gap: 10px;
-      width: 90%;
-      justify-items: center;
+      justify-content: center;
       margin-top: 30px;
     }
     .zodiac-grid img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
+      width: 70px;
+      height: 70px;
       cursor: pointer;
     }
   </style>
@@ -132,7 +125,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 22</div>
+  <div class="build">Сборка 19</div>
 </header>
 
 <!-- Главный экран -->
@@ -150,9 +143,7 @@
   <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
   <div class="fortune" id="fortune"></div>
-  <button class="back-button" id="reloadButton" style="top:auto; bottom:20px; left:50%; transform:translateX(-50%);" onclick="reloadCookie()">
-    <img src="reload.png">
-  </button>
+  <button class="back-button" style="top:auto; bottom:10px;" onclick="reloadCookie()"><img src="reload.png"></button>
 </div>
 
 <!-- Экран шара -->
@@ -182,7 +173,7 @@
 <!-- Экран прогноза зодиака -->
 <div id="zodiacDetailScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToZodiac()"><img src="back.png"></button>
-  <img id="zodiacDetailImg" src="" alt="Знак" style="width:150px; height:150px; object-fit:contain;">
+  <img id="zodiacDetailImg" src="" alt="Знак" style="width:150px; height:150px;">
   <div class="zodiac-text" id="zodiacText"></div>
 </div>
 
@@ -289,14 +280,14 @@
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     const screen=document.getElementById("zodiacDetailScreen");
     screen.style.display="flex";
-    const img=document.getElementById("zodiacDetailImg");
-    img.src=`Group (${i}).png`;
-    const text=document.getElementById("zodiacText");
-    if(zodiacPredictions.length>=i){let p=zodiacPredictions[i-1]; if(typeof p==="object"&&p!==null&&p.text)p=p.text; text.textContent=p;}
-    else text.textContent="Прогноз недоступен";
-    text.classList.add("show");
+    document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
+    if(zodiacPredictions.length>=i) document.getElementById("zodiacText").textContent=zodiacPredictions[i-1];
+    else document.getElementById("zodiacText").textContent="Прогноз недоступен";
   }
-  function backToZodiac(){document.querySelectorAll('.container').forEach(c=>c.style.display="none");document.getElementById("zodiacScreen").style.display="flex");}
+  function backToZodiac(){
+    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+    document.getElementById("zodiacScreen").style.display="flex";
+  }
 </script>
 
 </body>
