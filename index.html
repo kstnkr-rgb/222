@@ -1,4 +1,4 @@
-<!-- Сборка 33 -->
+<!-- Сборка 34 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -45,6 +45,7 @@
       justify-content: center;
       text-align: center;
       margin-top: 80px;
+      width: 100%;
     }
     .icon-grid {
       display: grid;
@@ -102,7 +103,7 @@
     .tarot-container {
       display: flex;
       gap: 15px;
-      margin-top: 30px;
+      margin-top: 10px;
     }
     .tarot-card img {
       width: 100px;
@@ -133,6 +134,36 @@
       max-height: 300px;
       overflow-y: auto;
     }
+    
+    /* Стили для экрана Таро */
+    #tarotScreen {
+      justify-content: flex-start;
+      padding-top: 30px;
+    }
+    
+    .tarot-text {
+      max-height: 40vh;
+      overflow-y: auto;
+      margin-top: 15px;
+      padding: 10px 15px;
+    }
+    
+    /* Индикатор загрузки */
+    .loader {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: 10px auto;
+      display: none;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -140,7 +171,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 33</div>
+  <div class="build">Сборка 34</div>
 </header>
 
 <!-- Главный экран -->
@@ -157,6 +188,7 @@
 <div id="cookieScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
+  <div class="loader" id="cookieLoader"></div>
   <div class="fortune" id="fortune"></div>
   <button class="back-button" style="top:auto; bottom:10px;" onclick="reloadCookie()"><img src="reload.png"></button>
 </div>
@@ -197,6 +229,7 @@
   let spherePredictions = [];
   let tarotPredictions = [];
   let zodiacPredictions = [];
+  const DEEPSEEK_API_KEY = 'sk-2c1bea3f1d6b417990b99340ac3ac155'; // ВНИМАНИЕ: НЕБЕЗОПАСНО!
 
   fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data);
   fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data);
@@ -212,80 +245,89 @@
     document.getElementById('mainScreen').style.display="flex";
   }
 
-async function openCookie(){
+  // Печенье с DeepSeek API
+  async function openCookie(){
     const img = document.getElementById("cookieImage");
     const fortune = document.getElementById("fortune");
+    const loader = document.getElementById("cookieLoader");
     
     img.src = "cookie_open.png";
     img.classList.add("opened");
     
-    // Показываем индикатор загрузки
-    fortune.textContent = "Генерируем предсказание...";
-    fortune.classList.add("show");
+    // Показываем загрузку
+    fortune.textContent = "";
+    loader.style.display = "block";
     
     try {
-        // Вызов API для генерации предсказания
-        const prediction = await generateAIPrediction();
-        fortune.textContent = prediction;
+      // Генерация предсказания через DeepSeek API
+      const prediction = await generateDeepSeekPrediction();
+      fortune.textContent = prediction;
     } catch (error) {
-        console.error("Ошибка генерации предсказания:", error);
-        // Fallback на локальные предсказания
-        if(predictions.length > 0){
-            const idx = Math.floor(Math.random() * predictions.length);
-            fortune.textContent = predictions[idx];
-        } else {
-            fortune.textContent = "Предсказание недоступно";
-        }
+      console.error("Ошибка генерации предсказания:", error);
+      // Fallback на локальные предсказания
+      if(predictions.length > 0){
+        const idx = Math.floor(Math.random() * predictions.length);
+        fortune.textContent = predictions[idx];
+      } else {
+        fortune.textContent = "Предсказание недоступно";
+      }
+    } finally {
+      loader.style.display = "none";
+      fortune.classList.add("show");
     }
-}
+  }
+  
+  // Функция для генерации предсказания через DeepSeek API
+  async function generateDeepSeekPrediction() {
+    try {
+      const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "deepseek-chat",
+          messages: [
+            {
+              role: "system",
+              content: "Ты мистический оракул, который дает мудрые, позитивные и вдохновляющие предсказания на будущее. Предсказания должны быть краткими (1-2 предложения), загадочными и обнадеживающими. Отвечай только текстом предсказания без дополнительных объяснений."
+            },
+            {
+              role: "user", 
+              content: "Сгенерируй случайное предсказание для печенья удачи на русском языке."
+            }
+          ],
+          max_tokens: 50,
+          temperature: 0.8
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`DeepSeek API error: ${errorData.error?.message || response.status}`);
+      }
+      
+      const data = await response.json();
+      return data.choices[0].message.content;
+      
+    } catch (error) {
+      console.error("Error calling DeepSeek API:", error);
+      throw error;
+    }
+  }
+
   function reloadCookie(){
     const img=document.getElementById("cookieImage");
     const fortune=document.getElementById("fortune");
+    const loader = document.getElementById("cookieLoader");
+    
     img.src="cookie_closed.png";
     img.classList.remove("opened");
     fortune.textContent="";
     fortune.classList.remove("show");
+    loader.style.display = "none";
   }
-
-// Добавьте эту функцию в ваш скрипт
-async function generateAIPrediction() {
-    try {
-        // Ваш запрос к API
-        const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'sk-2c1bea3f1d6b417990b99340ac3ac155' // Замените на ваш API-ключ
-            },
-            body: JSON.stringify({
-                model: "deepseek-chat",
-                messages: [
-                    {
-                        role: "system",
-                        content: "Ты мистический оракул, который дает мудрые, позитивные и вдохновляющие предсказания на будущее. Предсказания должны быть краткими (1-2 предложения), загадочными и обнадеживающими."
-                    },
-                    {
-                        role: "user", 
-                        content: "Сгенерируй случайное предсказание для печенья удачи на русском языке. Добавляй в конце цифру 10."
-                    }
-                ],
-                max_tokens: 50,
-                temperature: 0.8
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`API error: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        return data.choices[0].message.content;
-        
-    } catch (error) {
-        console.error("Error calling AI API:", error);
-        throw error;
-    }
-}
 
   // Шар
   const sphereImg=document.querySelector(".sphere-image");
@@ -385,4 +427,3 @@ async function generateAIPrediction() {
 
 </body>
 </html>
-
