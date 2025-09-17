@@ -92,13 +92,12 @@
       width: 40px;
       height: 40px;
     }
-    /* ИЗМЕНЕНИЯ: Увеличиваем шар в 1.5 раза и корректируем расположение */
     .sphere-image {
-      width: 300px; /* Было 200px - увеличили в 1.5 раза */
-      height: 300px; /* Было 200px - увеличили в 1.5 раза */
+      width: 300px;
+      height: 300px;
       cursor: pointer;
-      margin-top: 20px; /* Добавили отступ сверху */
-      margin-bottom: 30px; /* Добавили отступ снизу для текста */
+      margin-top: 20px;
+      margin-bottom: 30px;
     }
     .tarot-container {
       display: flex;
@@ -133,6 +132,11 @@
     .zodiac-text {
       max-height: 300px;
       overflow-y: auto;
+      text-align: left;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -298,9 +302,35 @@
     const screen=document.getElementById("zodiacDetailScreen");
     screen.style.display="flex";
     document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
-    if(zodiacPredictions.length>=i) document.getElementById("zodiacText").textContent=zodiacPredictions[i-1];
-    else document.getElementById("zodiacText").textContent="Прогноз недоступен";
+    
+    // ИСПРАВЛЕНИЕ: Правильное отображение текста прогноза
+    if(zodiacPredictions.length >= i) {
+      const prediction = zodiacPredictions[i-1];
+      
+      // Проверяем, является ли prediction объектом
+      if (typeof prediction === 'object' && prediction !== null) {
+        // Если у объекта есть свойство text, используем его
+        if (prediction.text) {
+          document.getElementById("zodiacText").textContent = prediction.text;
+        } 
+        // Иначе преобразуем объект в строку (для отладки)
+        else {
+          document.getElementById("zodiacText").textContent = JSON.stringify(prediction);
+        }
+      } 
+      // Если prediction - строка, используем как есть
+      else if (typeof prediction === 'string') {
+        document.getElementById("zodiacText").textContent = prediction;
+      } 
+      // В случае других типов данных
+      else {
+        document.getElementById("zodiacText").textContent = "Прогноз недоступен";
+      }
+    } else {
+      document.getElementById("zodiacText").textContent = "Прогноз недоступен";
+    }
   }
+  
   function backToZodiac(){
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById("zodiacScreen").style.display="flex";
