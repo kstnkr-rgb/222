@@ -1,4 +1,4 @@
-<!-- Сборка 17 -->
+<!-- Сборка 18 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Оракул</title>
   <style>
-    /* Базовая верстка — не менять без разрешения */
     body {
       margin: 0;
       padding: 0;
@@ -34,9 +33,6 @@
     header img { max-height: 40px; margin: 2px 0; }
     header .build { font-size: 12px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.7); }
 
-    /* По умолчанию контейнер центрирует контент.
-       Для экранов, где нужно разместить основной объект в верхней части,
-       мы применяем класс .top-screen — только он изменяет вертикальное выравнивание. */
     .container {
       flex: 1;
       display: flex;
@@ -46,32 +42,15 @@
       text-align: center;
       margin-top: 80px;
     }
+    .top-screen { justify-content: flex-start; padding-top: 80px; }
 
-    /* Класс, который сдвигает содержимое к верхней части экрана.
-       Применён только к тем экранам, которые ты попросил: sphere, cookie, tarot, zodiac detail. */
-    .top-screen {
-      justify-content: flex-start;
-      padding-top: 80px; /* позиционирование от верхней части — одинаково для всех этих экранов */
-    }
-
-    .icon-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 100px);
-      grid-gap: 20px;
-      justify-content: center;
-      align-items: center;
-    }
+    .icon-grid { display: grid; grid-template-columns: repeat(2, 100px); grid-gap: 20px; justify-content: center; align-items: center; }
     .icon-grid img { width: 100px; height: 100px; cursor: pointer; }
 
-    .cookie-image {
-      width: 180px;
-      max-width: 250px;
-      margin-bottom: 20px;
-      transition: transform 0.5s ease;
-    }
+    .cookie-image { width: 180px; max-width: 250px; margin-bottom: 20px; transition: transform 0.5s ease; }
     .cookie-image.opened { transform: scale(1.2) rotate(-5deg); }
 
-    .fortune, .sphere-text, .tarot-text, .zodiac-text {
+    .fortune, .sphere-text, .tarot-text {
       font-size: 18px;
       color: #fff;
       text-shadow: 0 2px 5px rgba(0,0,0,0.8);
@@ -81,33 +60,26 @@
       overflow-y: auto;
     }
 
-    .back-button {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      z-index: 1001;
+    /* увеличиваем поле видимости текста прогноза зодиака */
+    .zodiac-text {
+      font-size: 18px;
+      color: #fff;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+      margin-top: 20px;
+      padding: 0 15px;
+      max-height: 400px; /* увеличено с 200px до 400px */
+      overflow-y: auto;
     }
+
+    .back-button { position: fixed; top: 10px; left: 10px; background: transparent; border: none; cursor: pointer; z-index: 1001; }
     .back-button img { width: 40px; height: 40px; }
 
-    /* Шар: базовый размер 200px, при достаточной ширине экрана — 1.5× = 300px */
-    .sphere-image {
-      width: 200px;    /* оригинальный размер */
-      height: auto;
-      cursor: pointer;
-      display: block;
-    }
-    @media (min-width: 360px) {
-      /* если ширина экрана позволяет (>=360px), увеличиваем до 300px */
-      .sphere-image { width: 300px; }
-    }
+    .sphere-image { width: 200px; height: auto; cursor: pointer; display: block; }
+    @media (min-width: 360px) { .sphere-image { width: 300px; } }
 
-    .tarot-container { display: flex; gap: 15px; margin-top: 8px; } /* небольшая корректировка, позиция берётся от .top-screen */
+    .tarot-container { display: flex; gap: 15px; margin-top: 8px; }
     .tarot-card img { width: 100px; cursor: pointer; }
 
-    /* Гороскоп — сетка 3 колонки, на всю ширину с отступом */
     .zodiac-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -119,24 +91,9 @@
       max-width: 500px;
       margin: 0 auto;
     }
-    .zodiac-grid img {
-      width: 100%;
-      aspect-ratio: 1 / 1; /* квадрат */
-      object-fit: contain;  /* без искажений */
-      cursor: pointer;
-    }
+    .zodiac-grid img { width: 100%; aspect-ratio: 1 / 1; object-fit: contain; cursor: pointer; }
 
-    /* Деталь зодиака — та же позиция, что и шар: квадратный контейнер, object-fit:contain */
-    #zodiacDetailImg {
-      width: 200px; /* совпадает по горизонтали с шаром по центру; размер можно подстраивать выше при media query, но не меняю — шар контролирует визу */
-      height: 200px;
-      object-fit: contain;
-      display: block;
-      margin-bottom: 20px;
-    }
-
-    /* Обеспечиваем, что элементы в top-screen (cookie, tarot cards, zodiac detail) будут размещаться одинаково */
-    /* Ничего больше не меняю. */
+    #zodiacDetailImg { width: 200px; height: 200px; object-fit: contain; display: block; margin-bottom: 20px; }
   </style>
 </head>
 <body>
@@ -144,10 +101,9 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 17</div>
+  <div class="build">Сборка 18</div>
 </header>
 
-<!-- Главный экран -->
 <div id="mainScreen" class="container">
   <div class="icon-grid">
     <img src="sphere.png" alt="Шар" onclick="showScreen('sphereScreen')">
@@ -157,26 +113,21 @@
   </div>
 </div>
 
-<!-- Экран печенья (теперь использует top-screen — точная позиция совпадает с шаром) -->
 <div id="cookieScreen" class="container top-screen" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
-  <!-- Позиция этого изображения совпадает с позицией шара на экране шара благодаря top-screen -->
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
   <div class="fortune" id="fortune"></div>
-  <!-- reload остаётся как раньше; появление контролируем скриптом -->
   <button id="reloadButton" class="reload-button" style="display:none; background:transparent; border:none; margin-top:15px; cursor:pointer;" onclick="resetCookie()">
     <img src="reload.png" alt="Перезагрузить" style="width:40px; height:40px;">
   </button>
 </div>
 
-<!-- Экран шара (top-screen) — шар выводится в верхней части и центрируется по горизонтали -->
 <div id="sphereScreen" class="container top-screen" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
   <img src="sphere.png" alt="Шар" class="sphere-image" onclick="showSpherePrediction()">
   <div class="sphere-text" id="sphereText"></div>
 </div>
 
-<!-- Экран Таро (top-screen — карты будут располагаться в том же вертикальном положении, что и шар) -->
 <div id="tarotScreen" class="container top-screen" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
   <div class="tarot-container">
@@ -187,13 +138,11 @@
   <div class="tarot-text" id="tarotText"></div>
 </div>
 
-<!-- Экран Зодиака (сетка) -->
 <div id="zodiacScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
   <div class="zodiac-grid" id="zodiacGrid"></div>
 </div>
 
-<!-- Экран прогноза зодиака (деталь) — top-screen, картинка в том же месте, что и шар -->
 <div id="zodiacDetailScreen" class="container top-screen" style="display:none;">
   <button class="back-button" onclick="backToZodiac()"><img src="back.png" alt="Назад"></button>
   <img id="zodiacDetailImg" src="" alt="Знак">
@@ -201,148 +150,77 @@
 </div>
 
 <script>
-  /* Загружает JSON-файлы, как и было в базе (ничего здесь не менял, кроме вывода зодиака: беру .text, если объект) */
-  let predictions = [];
-  let spherePredictions = [];
-  let tarotPredictions = [];
-  let zodiacPredictions = [];
-
+  let predictions=[], spherePredictions=[], tarotPredictions=[], zodiacPredictions=[];
   fetch('predictions.json').then(r=>r.json()).then(d=>predictions=d).catch(()=>{predictions=[]});
   fetch('sphere_predictions.json').then(r=>r.json()).then(d=>spherePredictions=d).catch(()=>{spherePredictions=[]});
   fetch('tarot_predictions.json').then(r=>r.json()).then(d=>tarotPredictions=d).catch(()=>{tarotPredictions=[]});
   fetch('zodiac_predictions.json').then(r=>r.json()).then(d=>zodiacPredictions=d).catch(()=>{zodiacPredictions=[]});
 
-  function showScreen(id){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById(id).style.display="flex";
-  }
-  function backToMain(){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById('mainScreen').style.display="flex";
-  }
+  function showScreen(id){ document.querySelectorAll('.container').forEach(c=>c.style.display="none"); document.getElementById(id).style.display="flex"; }
+  function backToMain(){ document.querySelectorAll('.container').forEach(c=>c.style.display="none"); document.getElementById('mainScreen').style.display="flex"; }
 
-  /* ------------------ ПЕЧЕНЬЕ ------------------ */
   function openCookie(){
-    const img = document.getElementById("cookieImage");
-    const fortune = document.getElementById("fortune");
-    const reloadBtn = document.getElementById("reloadButton");
-    img.src = "cookie_open.png";
-    img.classList.add("opened");
-    if(predictions.length > 0){
-      const idx = Math.floor(Math.random() * predictions.length);
-      // predictions может быть массивом строк или объектов
-      let p = predictions[idx];
-      if(typeof p === "object" && p !== null && p.text) p = p.text;
-      fortune.textContent = p;
-    } else {
-      fortune.textContent = "Предсказание недоступно";
-    }
-    fortune.classList.add("show");
-    // показываем кнопку перезагрузки только после открытия
-    reloadBtn.style.display = "inline-block";
+    const img = document.getElementById("cookieImage"), fortune = document.getElementById("fortune"), reloadBtn = document.getElementById("reloadButton");
+    img.src = "cookie_open.png"; img.classList.add("opened");
+    let idx = Math.floor(Math.random() * predictions.length), p = predictions[idx];
+    if(typeof p === "object" && p!==null && p.text) p = p.text;
+    fortune.textContent = p || "Предсказание недоступно"; fortune.classList.add("show");
+    reloadBtn.style.display="inline-block";
   }
-
   function resetCookie(){
-    const img = document.getElementById("cookieImage");
-    const fortune = document.getElementById("fortune");
-    const reloadBtn = document.getElementById("reloadButton");
-    img.src = "cookie_closed.png";
-    img.classList.remove("opened");
-    fortune.textContent = "";
-    fortune.classList.remove("show");
-    reloadBtn.style.display = "none";
+    const img=document.getElementById("cookieImage"), fortune=document.getElementById("fortune"), reloadBtn=document.getElementById("reloadButton");
+    img.src="cookie_closed.png"; img.classList.remove("opened");
+    fortune.textContent=""; fortune.classList.remove("show");
+    reloadBtn.style.display="none";
   }
 
-  /* ------------------ ШАР ------------------ */
-  const sphereText = document.getElementById("sphereText");
+  const sphereText=document.getElementById("sphereText");
   function showSpherePrediction(){
-    if(spherePredictions.length > 0){
-      const idx = Math.floor(Math.random() * spherePredictions.length);
-      let p = spherePredictions[idx];
-      if(typeof p === "object" && p !== null && p.text) p = p.text;
-      sphereText.textContent = p;
-    } else {
-      sphereText.textContent = "Предсказание недоступно";
-    }
+    if(spherePredictions.length>0){
+      const idx=Math.floor(Math.random()*spherePredictions.length);
+      let p=spherePredictions[idx]; if(typeof p==="object"&&p!==null&&p.text)p=p.text;
+      sphereText.textContent=p;
+    } else sphereText.textContent="Предсказание недоступно";
     sphereText.classList.add("show");
   }
-
-  // тряска устройства — также вызывает предсказание
-  let lastX=null, lastY=null, lastZ=null;
-  window.addEventListener("devicemotion", (e) => {
-    const acc = e.accelerationIncludingGravity || {};
-    const x = acc.x || 0, y = acc.y || 0, z = acc.z || 0;
-    if(lastX !== null){
-      const dx = Math.abs(x - lastX);
-      const dy = Math.abs(y - lastY);
-      const dz = Math.abs(z - lastZ);
-      const speed = dx + dy + dz;
-      if(speed > 25){
-        // только если сейчас отображён экран сферы
-        if(document.getElementById("sphereScreen").style.display === "flex"){
-          showSpherePrediction();
-        }
-      }
+  let lastX=null,lastY=null,lastZ=null;
+  window.addEventListener("devicemotion",(e)=>{
+    const acc=e.accelerationIncludingGravity||{}, x=acc.x||0,y=acc.y||0,z=acc.z||0;
+    if(lastX!==null){
+      const speed=Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ);
+      if(speed>25 && document.getElementById("sphereScreen").style.display==="flex") showSpherePrediction();
     }
-    lastX = x; lastY = y; lastZ = z;
+    lastX=x; lastY=y; lastZ=z;
   });
 
-  /* ------------------ ТАРО ------------------ */
-  let openedCards = 0;
-  function openTarotCard(container, num){
-    const img = container.querySelector("img");
-    if(img && img.src.includes("close.png")){
-      img.src = `open${num}.png`;
-      openedCards++;
-      if(openedCards === 3){
-        const tariffEl = document.getElementById("tarotText");
-        if(tarotPredictions.length > 0){
-          // tarotPredictions может быть массивом объектов {card,text} или строк
-          const html = tarotPredictions.map(p=>{
-            let txt = (typeof p === "object" && p !== null && p.text) ? p.text : p;
-            return `<p>${txt}</p>`;
-          }).join("");
-          tariffEl.innerHTML = html;
-        } else {
-          tariffEl.textContent = "Толкование недоступно";
-        }
-        tariffEl.classList.add("show");
+  let openedCards=0;
+  function openTarotCard(container,num){
+    const img=container.querySelector("img");
+    if(img.src.includes("close.png")){ img.src=`open${num}.png`; openedCards++;
+      if(openedCards===3){
+        const t=document.getElementById("tarotText");
+        t.innerHTML=tarotPredictions.map(p=>{let txt=(typeof p==="object"&&p!==null&&p.text)?p.text:p; return `<p>${txt}</p>`}).join("") || "Толкование недоступно";
+        t.classList.add("show");
       }
     }
   }
 
-  /* ------------------ ЗОДИАК ------------------ */
-  const zodiacGrid = document.getElementById("zodiacGrid");
-  for(let i=1; i<=12; i++){
-    const img = document.createElement("img");
-    img.src = `Group (${i}).png`;
-    img.alt = `Знак ${i}`;
-    img.onclick = ()=> openZodiacDetail(i);
-    zodiacGrid.appendChild(img);
+  const zodiacGrid=document.getElementById("zodiacGrid");
+  for(let i=1;i<=12;i++){
+    const img=document.createElement("img"); img.src=`Group (${i}).png`; img.alt=`Знак ${i}`; img.onclick=()=>openZodiacDetail(i); zodiacGrid.appendChild(img);
   }
 
   function openZodiacDetail(i){
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById("zodiacDetailScreen").style.display = "flex";
-    document.getElementById("zodiacDetailImg").src = `Group (${i}).png`;
-
-    // zodiacPredictions может быть массив строк или массив объектов {text: "..."}
-    if(zodiacPredictions.length >= i){
-      let entry = zodiacPredictions[i-1];
-      if(typeof entry === "object" && entry !== null && entry.text) entry = entry.text;
-      document.getElementById("zodiacText").textContent = entry;
-    } else {
-      document.getElementById("zodiacText").textContent = "Прогноз недоступен";
-    }
+    document.getElementById("zodiacDetailScreen").style.display="flex";
+    document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
+    let entry=zodiacPredictions[i-1];
+    if(typeof entry==="object"&&entry!==null&&entry.text) entry=entry.text;
+    document.getElementById("zodiacText").textContent=entry||"Прогноз недоступен";
   }
+  function backToZodiac(){ document.querySelectorAll('.container').forEach(c=>c.style.display="none"); document.getElementById('zodiacScreen').style.display="flex"; }
 
-  function backToZodiac(){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById('zodiacScreen').style.display = "flex";
-  }
-
-  // По умолчанию показываем главный экран
-  document.getElementById('mainScreen').style.display = 'flex';
+  document.getElementById('mainScreen').style.display='flex';
 </script>
 
 </body>
