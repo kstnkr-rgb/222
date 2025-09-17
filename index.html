@@ -1,109 +1,42 @@
-<!-- Сборка 18 -->
+<!-- Сборка 19 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Оракул</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-image: url('background.png');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    header {
-      position: fixed;
-      top: 10px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 1000;
-    }
-
-    header img { max-height: 40px; margin: 2px 0; }
-    header .build { font-size: 12px; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.7); }
-
-    .container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      margin-top: 80px;
-    }
-    .top-screen { justify-content: flex-start; padding-top: 80px; }
-
-    .icon-grid { display: grid; grid-template-columns: repeat(2, 100px); grid-gap: 20px; justify-content: center; align-items: center; }
-    .icon-grid img { width: 100px; height: 100px; cursor: pointer; }
-
-    .cookie-image { width: 180px; max-width: 250px; margin-bottom: 20px; transition: transform 0.5s ease; }
-    .cookie-image.opened { transform: scale(1.2) rotate(-5deg); }
-
-    .fortune, .sphere-text, .tarot-text {
-      font-size: 18px;
-      color: #fff;
-      text-shadow: 0 2px 5px rgba(0,0,0,0.8);
-      margin-top: 20px;
-      padding: 0 15px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    /* увеличиваем поле видимости текста прогноза зодиака */
-    .zodiac-text {
-      font-size: 18px;
-      color: #fff;
-      text-shadow: 0 2px 5px rgba(0,0,0,0.8);
-      margin-top: 20px;
-      padding: 0 15px;
-      max-height: 400px; /* увеличено с 200px до 400px */
-      overflow-y: auto;
-    }
-
-    .back-button { position: fixed; top: 10px; left: 10px; background: transparent; border: none; cursor: pointer; z-index: 1001; }
-    .back-button img { width: 40px; height: 40px; }
-
-    .sphere-image { width: 200px; height: auto; cursor: pointer; display: block; }
-    @media (min-width: 360px) { .sphere-image { width: 300px; } }
-
-    .tarot-container { display: flex; gap: 15px; margin-top: 8px; }
-    .tarot-card img { width: 100px; cursor: pointer; }
-
-    .zodiac-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      padding: 0 12px;
-      justify-items: center;
-      align-items: center;
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-    .zodiac-grid img { width: 100%; aspect-ratio: 1 / 1; object-fit: contain; cursor: pointer; }
-
-    #zodiacDetailImg { width: 200px; height: 200px; object-fit: contain; display: block; margin-bottom: 20px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Оракул</title>
+<style>
+  body {margin:0;padding:0;font-family:'Segoe UI',sans-serif;height:100vh;display:flex;flex-direction:column;align-items:center;background-image:url('background.png');background-size:cover;background-position:center;background-repeat:no-repeat;}
+  header {position:fixed;top:10px;width:100%;display:flex;flex-direction:column;align-items:center;z-index:1000;}
+  header img {max-height:40px;margin:2px 0;}
+  header .build {font-size:12px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.7);}
+  .container {flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-top:80px;}
+  .icon-grid {display:grid;grid-template-columns:repeat(2,100px);grid-gap:20px;justify-content:center;align-items:center;}
+  .icon-grid img {width:100px;height:100px;cursor:pointer;}
+  .cookie-image {width:180px;max-width:250px;margin-bottom:20px;transition:transform 0.5s ease;}
+  .cookie-image.opened {transform:scale(1.2) rotate(-5deg);}
+  .fortune,.sphere-text,.tarot-text,.zodiac-text {font-size:18px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,0.8);margin-top:20px;padding:0 15px;}
+  .fortune.show,.sphere-text.show,.tarot-text.show,.zodiac-text.show {opacity:1;}
+  .back-button {position:fixed;top:10px;left:10px;background:transparent;border:none;cursor:pointer;z-index:1001;}
+  .back-button img {width:40px;height:40px;}
+  .sphere-image {cursor:pointer;max-width:150%;width:auto;height:auto;}
+  .tarot-container {display:flex;gap:15px;margin-top:30px;}
+  .tarot-card img {width:100px;cursor:pointer;}
+  .zodiac-grid {display:grid;grid-template-columns:repeat(3,1fr);grid-gap:5px;width:95%;justify-items:center;margin-top:30px;}
+  .zodiac-grid img {width:100%;max-width:90px;aspect-ratio:1;object-fit:contain;cursor:pointer;}
+  /* Изменение: увеличенная область видимости текста прогноза */
+  #zodiacText {max-height:500px; overflow-y:auto;}
+</style>
 </head>
 <body>
 
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 18</div>
+  <div class="build">Сборка 19</div>
 </header>
 
+<!-- Главный экран -->
 <div id="mainScreen" class="container">
   <div class="icon-grid">
     <img src="sphere.png" alt="Шар" onclick="showScreen('sphereScreen')">
@@ -113,114 +46,113 @@
   </div>
 </div>
 
-<div id="cookieScreen" class="container top-screen" style="display:none;">
-  <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
+<!-- Экран печенья -->
+<div id="cookieScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
   <div class="fortune" id="fortune"></div>
-  <button id="reloadButton" class="reload-button" style="display:none; background:transparent; border:none; margin-top:15px; cursor:pointer;" onclick="resetCookie()">
-    <img src="reload.png" alt="Перезагрузить" style="width:40px; height:40px;">
-  </button>
+  <button id="reloadButton" onclick="resetCookie()" style="display:none;background:transparent;border:none;"><img src="reload.png" style="width:50px;height:50px;"></button>
 </div>
 
-<div id="sphereScreen" class="container top-screen" style="display:none;">
-  <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
-  <img src="sphere.png" alt="Шар" class="sphere-image" onclick="showSpherePrediction()">
+<!-- Экран шара -->
+<div id="sphereScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
+  <img src="sphere.png" alt="Шар" class="sphere-image">
   <div class="sphere-text" id="sphereText"></div>
 </div>
 
-<div id="tarotScreen" class="container top-screen" style="display:none;">
-  <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
+<!-- Экран Таро -->
+<div id="tarotScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <div class="tarot-container">
-    <div class="tarot-card" onclick="openTarotCard(this,1)"><img src="close.png" alt="Таро 1"></div>
-    <div class="tarot-card" onclick="openTarotCard(this,2)"><img src="close.png" alt="Таро 2"></div>
-    <div class="tarot-card" onclick="openTarotCard(this,3)"><img src="close.png" alt="Таро 3"></div>
+    <div class="tarot-card" onclick="openTarotCard(this,1)"><img src="close.png"></div>
+    <div class="tarot-card" onclick="openTarotCard(this,2)"><img src="close.png"></div>
+    <div class="tarot-card" onclick="openTarotCard(this,3)"><img src="close.png"></div>
   </div>
   <div class="tarot-text" id="tarotText"></div>
 </div>
 
+<!-- Экран Зодиака -->
 <div id="zodiacScreen" class="container" style="display:none;">
-  <button class="back-button" onclick="backToMain()"><img src="back.png" alt="Назад"></button>
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <div class="zodiac-grid" id="zodiacGrid"></div>
 </div>
 
-<div id="zodiacDetailScreen" class="container top-screen" style="display:none;">
-  <button class="back-button" onclick="backToZodiac()"><img src="back.png" alt="Назад"></button>
-  <img id="zodiacDetailImg" src="" alt="Знак">
+<!-- Экран прогноза Зодиака -->
+<div id="zodiacDetailScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToZodiac()"><img src="back.png"></button>
+  <img id="zodiacDetailImg" src="" alt="Знак" style="width:150px;height:150px;object-fit:contain;">
   <div class="zodiac-text" id="zodiacText"></div>
 </div>
 
 <script>
-  let predictions=[], spherePredictions=[], tarotPredictions=[], zodiacPredictions=[];
-  fetch('predictions.json').then(r=>r.json()).then(d=>predictions=d).catch(()=>{predictions=[]});
-  fetch('sphere_predictions.json').then(r=>r.json()).then(d=>spherePredictions=d).catch(()=>{spherePredictions=[]});
-  fetch('tarot_predictions.json').then(r=>r.json()).then(d=>tarotPredictions=d).catch(()=>{tarotPredictions=[]});
-  fetch('zodiac_predictions.json').then(r=>r.json()).then(d=>zodiacPredictions=d).catch(()=>{zodiacPredictions=[]});
+let predictions=[], spherePredictions=[], tarotPredictions=[], zodiacPredictions=[];
+fetch('predictions.json').then(r=>r.json()).then(d=>predictions=d);
+fetch('sphere_predictions.json').then(r=>r.json()).then(d=>spherePredictions=d);
+fetch('tarot_predictions.json').then(r=>r.json()).then(d=>tarotPredictions=d);
+fetch('zodiac_predictions.json').then(r=>r.json()).then(d=>zodiacPredictions=d);
 
-  function showScreen(id){ document.querySelectorAll('.container').forEach(c=>c.style.display="none"); document.getElementById(id).style.display="flex"; }
-  function backToMain(){ document.querySelectorAll('.container').forEach(c=>c.style.display="none"); document.getElementById('mainScreen').style.display="flex"; }
+function showScreen(id){document.querySelectorAll('.container').forEach(c=>c.style.display="none");document.getElementById(id).style.display="flex";}
+function backToMain(){document.querySelectorAll('.container').forEach(c=>c.style.display="none");document.getElementById('mainScreen').style.display="flex";}
 
-  function openCookie(){
-    const img = document.getElementById("cookieImage"), fortune = document.getElementById("fortune"), reloadBtn = document.getElementById("reloadButton");
-    img.src = "cookie_open.png"; img.classList.add("opened");
-    let idx = Math.floor(Math.random() * predictions.length), p = predictions[idx];
-    if(typeof p === "object" && p!==null && p.text) p = p.text;
-    fortune.textContent = p || "Предсказание недоступно"; fortune.classList.add("show");
-    reloadBtn.style.display="inline-block";
-  }
-  function resetCookie(){
-    const img=document.getElementById("cookieImage"), fortune=document.getElementById("fortune"), reloadBtn=document.getElementById("reloadButton");
-    img.src="cookie_closed.png"; img.classList.remove("opened");
-    fortune.textContent=""; fortune.classList.remove("show");
-    reloadBtn.style.display="none";
-  }
+// Печенье
+function openCookie(){
+  const img=document.getElementById("cookieImage"), fortune=document.getElementById("fortune"), reloadBtn=document.getElementById("reloadButton");
+  img.src="cookie_open.png"; img.classList.add("opened");
+  let idx=Math.floor(Math.random()*predictions.length), p=predictions[idx];
+  if(typeof p==="object"&&p!==null&&p.text)p=p.text;
+  fortune.textContent=p||"Предсказание недоступно"; fortune.classList.add("show");
+  reloadBtn.style.display="inline-block";
+}
+function resetCookie(){
+  const img=document.getElementById("cookieImage"), fortune=document.getElementById("fortune"), reloadBtn=document.getElementById("reloadButton");
+  img.src="cookie_closed.png"; img.classList.remove("opened");
+  fortune.textContent=""; fortune.classList.remove("show");
+  reloadBtn.style.display="none";
+}
 
-  const sphereText=document.getElementById("sphereText");
-  function showSpherePrediction(){
-    if(spherePredictions.length>0){
-      const idx=Math.floor(Math.random()*spherePredictions.length);
-      let p=spherePredictions[idx]; if(typeof p==="object"&&p!==null&&p.text)p=p.text;
-      sphereText.textContent=p;
-    } else sphereText.textContent="Предсказание недоступно";
-    sphereText.classList.add("show");
-  }
-  let lastX=null,lastY=null,lastZ=null;
-  window.addEventListener("devicemotion",(e)=>{
-    const acc=e.accelerationIncludingGravity||{}, x=acc.x||0,y=acc.y||0,z=acc.z||0;
-    if(lastX!==null){
-      const speed=Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ);
-      if(speed>25 && document.getElementById("sphereScreen").style.display==="flex") showSpherePrediction();
-    }
-    lastX=x; lastY=y; lastZ=z;
-  });
+// Шар
+const sphereImg=document.querySelector(".sphere-image"), sphereText=document.getElementById("sphereText");
+sphereImg.addEventListener("click", showSpherePrediction);
+let lastX=null,lastY=null,lastZ=null;
+window.addEventListener("devicemotion",(e)=>{
+  const {x=0,y=0,z=0}=e.accelerationIncludingGravity||{};
+  if(lastX!==null){const speed=Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ); if(speed>25 && document.getElementById("sphereScreen").style.display==="flex") showSpherePrediction();}
+  lastX=x; lastY=y; lastZ=z;
+});
+function showSpherePrediction(){
+  if(spherePredictions.length>0){let idx=Math.floor(Math.random()*spherePredictions.length), p=spherePredictions[idx]; if(typeof p==="object"&&p!==null&&p.text)p=p.text; sphereText.textContent=p;}
+  else sphereText.textContent="Предсказание недоступно";
+  sphereText.classList.add("show");
+}
 
-  let openedCards=0;
-  function openTarotCard(container,num){
-    const img=container.querySelector("img");
-    if(img.src.includes("close.png")){ img.src=`open${num}.png`; openedCards++;
-      if(openedCards===3){
-        const t=document.getElementById("tarotText");
-        t.innerHTML=tarotPredictions.map(p=>{let txt=(typeof p==="object"&&p!==null&&p.text)?p.text:p; return `<p>${txt}</p>`}).join("") || "Толкование недоступно";
-        t.classList.add("show");
-      }
+// Таро
+let openedCards=0;
+function openTarotCard(container,num){
+  const img=container.querySelector("img");
+  if(img.src.includes("close.png")){ img.src=`open${num}.png`; openedCards++;
+    if(openedCards===3){
+      const t=document.getElementById("tarotText");
+      t.innerHTML=tarotPredictions.map(p=>{let txt=(typeof p==="object"&&p!==null&&p.text)?p.text:p; return `<p>${txt}</p>`}).join("") || "Толкование недоступно";
+      t.classList.add("show");
     }
   }
+}
 
-  const zodiacGrid=document.getElementById("zodiacGrid");
-  for(let i=1;i<=12;i++){
-    const img=document.createElement("img"); img.src=`Group (${i}).png`; img.alt=`Знак ${i}`; img.onclick=()=>openZodiacDetail(i); zodiacGrid.appendChild(img);
-  }
-
-  function openZodiacDetail(i){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById("zodiacDetailScreen").style.display="flex";
-    document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
-    let entry=zodiacPredictions[i-1];
-    if(typeof entry==="object"&&entry!==null&&entry.text) entry=entry.text;
-    document.getElementById("zodiacText").textContent=entry||"Прогноз недоступен";
-  }
-  function backToZodiac(){ document.querySelectorAll('.container').forEach(c=>c.style.display="none"); document.getElementById('zodiacScreen').style.display="flex"; }
-
-  document.getElementById('mainScreen').style.display='flex';
+// Зодиак
+const zodiacGrid=document.getElementById("zodiacGrid");
+for(let i=1;i<=12;i++){const img=document.createElement("img"); img.src=`Group (${i}).png`; img.onclick=()=>openZodiacDetail(i); zodiacGrid.appendChild(img);}
+function openZodiacDetail(i){
+  document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+  const screen=document.getElementById("zodiacDetailScreen");
+  screen.style.display="flex";
+  const img=document.getElementById("zodiacDetailImg"); img.src=`Group (${i}).png`;
+  const text=document.getElementById("zodiacText");
+  if(zodiacPredictions.length>=i){let p=zodiacPredictions[i-1]; if(typeof p==="object"&&p!==null&&p.text)p=p.text; text.textContent=p;}
+  else text.textContent="Прогноз недоступен";
+  text.classList.add("show");
+}
+function backToZodiac(){document.querySelectorAll('.container').forEach(c=>c.style.display="none");document.getElementById("zodiacScreen").style.display="flex";}
 </script>
 
 </body>
