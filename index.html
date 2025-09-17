@@ -1,4 +1,4 @@
-<!-- Сборка 16 -->
+<!-- Сборка 17 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -120,9 +120,16 @@
     }
     .zodiac-grid img {
       width: 100%;
-      aspect-ratio: 1 / 1;   /* квадратное соотношение */
-      object-fit: contain;   /* без искажения пропорций */
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
       cursor: pointer;
+    }
+    /* Деталь зодиака */
+    #zodiacDetailImg {
+      width: 150px;
+      height: 150px;
+      object-fit: contain; /* без искажений */
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -131,7 +138,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 16</div>
+  <div class="build">Сборка 17</div>
 </header>
 
 <!-- Главный экран -->
@@ -179,7 +186,7 @@
 <!-- Экран прогноза зодиака -->
 <div id="zodiacDetailScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToZodiac()"><img src="back.png"></button>
-  <img id="zodiacDetailImg" src="" alt="Знак" style="width:150px; height:150px;">
+  <img id="zodiacDetailImg" src="" alt="Знак">
   <div class="zodiac-text" id="zodiacText"></div>
 </div>
 
@@ -288,7 +295,11 @@
     document.getElementById("zodiacDetailScreen").style.display="flex";
     document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
     if(zodiacPredictions.length>=i){
-      document.getElementById("zodiacText").textContent=zodiacPredictions[i-1];
+      let prediction=zodiacPredictions[i-1];
+      if(typeof prediction==="object" && prediction.text){
+        prediction=prediction.text;
+      }
+      document.getElementById("zodiacText").textContent=prediction;
     } else {
       document.getElementById("zodiacText").textContent="Прогноз недоступен";
     }
