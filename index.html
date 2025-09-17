@@ -1,3 +1,4 @@
+<!-- Сборка 14 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -117,6 +118,17 @@
       height: 70px;
       cursor: pointer;
     }
+    .reload-button {
+      background: transparent;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+      display: none;
+    }
+    .reload-button img {
+      width: 40px;
+      height: 40px;
+    }
   </style>
 </head>
 <body>
@@ -124,7 +136,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 13</div>
+  <div class="build">Сборка 14</div>
 </header>
 
 <!-- Главный экран -->
@@ -142,6 +154,9 @@
   <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
   <div class="fortune" id="fortune"></div>
+  <button id="reloadButton" class="reload-button" onclick="resetCookie()">
+    <img src="reload.png" alt="Перезагрузить">
+  </button>
 </div>
 
 <!-- Экран шара -->
@@ -199,6 +214,7 @@
   function openCookie(){
     const img=document.getElementById("cookieImage");
     const fortune=document.getElementById("fortune");
+    const reloadBtn=document.getElementById("reloadButton");
     img.src="cookie_open.png";
     img.classList.add("opened");
     if(predictions.length>0){
@@ -209,6 +225,18 @@
       fortune.textContent="Предсказание недоступно";
       fortune.classList.add("show");
     }
+    reloadBtn.style.display="inline-block";
+  }
+
+  function resetCookie(){
+    const img=document.getElementById("cookieImage");
+    const fortune=document.getElementById("fortune");
+    const reloadBtn=document.getElementById("reloadButton");
+    img.src="cookie_closed.png";
+    img.classList.remove("opened");
+    fortune.textContent="";
+    fortune.classList.remove("show");
+    reloadBtn.style.display="none";
   }
 
   // Шар
