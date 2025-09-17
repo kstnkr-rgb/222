@@ -1,4 +1,4 @@
-<!-- Сборка 21 -->
+<!-- Сборка 19 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -42,6 +42,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       text-align: center;
       margin-top: 80px;
     }
@@ -101,12 +102,11 @@
     .sphere-image {
       width: 200px;
       max-width: 200px;
-      margin-top: 0;
     }
     .tarot-container {
       display: flex;
       gap: 15px;
-      margin-top: 0;
+      margin-top: 30px;
     }
     .tarot-card img {
       width: 100px;
@@ -132,7 +132,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 21</div>
+  <div class="build">Сборка 19</div>
 </header>
 
 <!-- Главный экран -->
@@ -158,14 +158,14 @@
 <!-- Экран шара -->
 <div id="sphereScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
-  <img src="sphere.png" alt="Шар" class="sphere-image" style="margin-top:0;">
+  <img src="sphere.png" alt="Шар" class="sphere-image">
   <div class="sphere-text" id="sphereText"></div>
 </div>
 
 <!-- Экран Таро -->
 <div id="tarotScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
-  <div class="tarot-container" style="margin-top:0;">
+  <div class="tarot-container">
     <div class="tarot-card" onclick="openTarotCard(this,1)"><img src="close.png"></div>
     <div class="tarot-card" onclick="openTarotCard(this,2)"><img src="close.png"></div>
     <div class="tarot-card" onclick="openTarotCard(this,3)"><img src="close.png"></div>
@@ -182,7 +182,7 @@
 <!-- Экран прогноза зодиака -->
 <div id="zodiacDetailScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToZodiac()"><img src="back.png"></button>
-  <img id="zodiacDetailImg" src="" alt="Знак" style="width:150px; height:150px; object-fit:contain; margin-top:0;">
+  <img id="zodiacDetailImg" src="" alt="Знак" style="width:150px; height:150px; object-fit:contain;">
   <div class="zodiac-text" id="zodiacText"></div>
 </div>
 
