@@ -1,4 +1,4 @@
-<!-- Сборка 14 -->
+<!-- Сборка 16 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -106,28 +106,23 @@
       width: 100px;
       cursor: pointer;
     }
+    /* Гороскоп */
     .zodiac-grid {
       display: grid;
-      grid-template-columns: repeat(4, 70px);
-      grid-gap: 10px;
-      justify-content: center;
-      margin-top: 30px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 0 12px;
+      justify-items: center;
+      align-items: center;
+      width: 100%;
+      max-width: 500px;
+      margin: auto;
     }
     .zodiac-grid img {
-      width: 70px;
-      height: 70px;
+      width: 100%;
+      aspect-ratio: 1 / 1;   /* квадратное соотношение */
+      object-fit: contain;   /* без искажения пропорций */
       cursor: pointer;
-    }
-    .reload-button {
-      background: transparent;
-      border: none;
-      margin-top: 15px;
-      cursor: pointer;
-      display: none;
-    }
-    .reload-button img {
-      width: 40px;
-      height: 40px;
     }
   </style>
 </head>
@@ -136,7 +131,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 14</div>
+  <div class="build">Сборка 16</div>
 </header>
 
 <!-- Главный экран -->
@@ -154,9 +149,7 @@
   <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
   <div class="fortune" id="fortune"></div>
-  <button id="reloadButton" class="reload-button" onclick="resetCookie()">
-    <img src="reload.png" alt="Перезагрузить">
-  </button>
+  <button onclick="resetCookie()"><img src="reload.png" alt="Обновить" style="width:40px; height:40px; margin-top:15px; cursor:pointer;"></button>
 </div>
 
 <!-- Экран шара -->
@@ -214,7 +207,6 @@
   function openCookie(){
     const img=document.getElementById("cookieImage");
     const fortune=document.getElementById("fortune");
-    const reloadBtn=document.getElementById("reloadButton");
     img.src="cookie_open.png";
     img.classList.add("opened");
     if(predictions.length>0){
@@ -225,18 +217,14 @@
       fortune.textContent="Предсказание недоступно";
       fortune.classList.add("show");
     }
-    reloadBtn.style.display="inline-block";
   }
-
   function resetCookie(){
     const img=document.getElementById("cookieImage");
     const fortune=document.getElementById("fortune");
-    const reloadBtn=document.getElementById("reloadButton");
     img.src="cookie_closed.png";
     img.classList.remove("opened");
     fortune.textContent="";
     fortune.classList.remove("show");
-    reloadBtn.style.display="none";
   }
 
   // Шар
