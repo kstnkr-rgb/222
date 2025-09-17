@@ -1,4 +1,4 @@
-<!-- Сборка 19 -->
+<!-- Сборка 30 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -108,15 +108,28 @@
     }
     .zodiac-grid {
       display: grid;
-      grid-template-columns: repeat(4, 70px);
-      grid-gap: 10px;
-      justify-content: center;
-      margin-top: 30px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      justify-items: center;
+      align-items: center;
+      width: 100%;
+      max-width: 360px;
+      margin-top: 20px;
     }
     .zodiac-grid img {
-      width: 70px;
-      height: 70px;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
       cursor: pointer;
+    }
+    .zodiac-detail-img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+    }
+    .zodiac-text {
+      max-height: 300px;
+      overflow-y: auto;
     }
   </style>
 </head>
@@ -125,7 +138,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 19</div>
+  <div class="build">Сборка 30</div>
 </header>
 
 <!-- Главный экран -->
@@ -173,7 +186,7 @@
 <!-- Экран прогноза зодиака -->
 <div id="zodiacDetailScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToZodiac()"><img src="back.png"></button>
-  <img id="zodiacDetailImg" src="" alt="Знак" style="width:150px; height:150px;">
+  <img id="zodiacDetailImg" class="zodiac-detail-img" src="" alt="Знак">
   <div class="zodiac-text" id="zodiacText"></div>
 </div>
 
@@ -276,6 +289,7 @@
     img.onclick=()=>openZodiacDetail(i);
     zodiacGrid.appendChild(img);
   }
+
   function openZodiacDetail(i){
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     const screen=document.getElementById("zodiacDetailScreen");
