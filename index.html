@@ -229,7 +229,23 @@
   let spherePredictions = [];
   let tarotPredictions = [];
   let zodiacPredictions = [];
-  const SERVER_URL = 'http://localhost:3000'; // URL вашего сервера
+  
+  // URL вашего сервера с Yandex GPT
+  const SERVER_URL = 'http://localhost:3000'; // Замените на ваш URL сервера
+
+  // Локальные предсказания для fallback
+  const localPredictions = [
+    "Сегодня вас ждет приятный сюрприз от старого друга.",
+    "Верьте в свои силы, и удача улыбнется вам очень скоро.",
+    "Неожиданная встреча изменит вашу жизнь к лучшему.",
+    "Ваша мечта скоро станет реальностью - продолжайте верить.",
+    "Финансовая удача на вашей стороне на этой неделе.",
+    "Ждите хороших новостей от близкого человека.",
+    "Ваше упорство будет вознаграждено в ближайшее время.",
+    "Путешествие принесет вам неожиданные открытия.",
+    "Творческий подход поможет решить сложную задачу.",
+    "Любовь и гармония наполнят ваш дом на этой неделе."
+  ];
 
   fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data);
   fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data);
@@ -240,12 +256,13 @@
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById(id).style.display="flex";
   }
+  
   function backToMain(){
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById('mainScreen').style.display="flex";
   }
 
-  // Печенье с серверной генерацией предсказаний
+  // Печенье с Yandex GPT API
   async function openCookie(){
     const img = document.getElementById("cookieImage");
     const fortune = document.getElementById("fortune");
@@ -260,26 +277,22 @@
     fortune.classList.remove("show");
     
     try {
-      // Генерация предсказания через сервер
-      const prediction = await generateAIPrediction();
+      // Генерация предсказания через сервер с Yandex GPT
+      const prediction = await generateYandexPrediction();
       fortune.textContent = prediction;
     } catch (error) {
       console.error("Ошибка генерации предсказания:", error);
       // Fallback на локальные предсказания
-      if(predictions.length > 0){
-        const idx = Math.floor(Math.random() * predictions.length);
-        fortune.textContent = predictions[idx];
-      } else {
-        fortune.textContent = "Предсказание недоступно";
-      }
+      const randomIndex = Math.floor(Math.random() * localPredictions.length);
+      fortune.textContent = localPredictions[randomIndex];
     } finally {
       loader.style.display = "none";
       fortune.classList.add("show");
     }
   }
   
-  // Функция для генерации предсказания через сервер
-  async function generateAIPrediction() {
+  // Функция для генерации предсказания через Yandex GPT
+  async function generateYandexPrediction() {
     try {
       const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {
         method: 'POST',
@@ -301,7 +314,7 @@
       }
       
     } catch (error) {
-      console.error("Ошибка при обращении к серверу:", error);
+      console.error("Ошибка при обращении к серверу Yandex GPT:", error);
       throw error;
     }
   }
@@ -341,7 +354,8 @@
       const idx = Math.floor(Math.random() * spherePredictions.length);
       sphereText.textContent = spherePredictions[idx];
     } else {
-      sphereText.textContent = "Предсказание недоступно";
+      const randomIndex = Math.floor(Math.random() * localPredictions.length);
+      sphereText.textContent = localPredictions[randomIndex];
     }
     sphereText.classList.add("show");
   }
@@ -418,10 +432,10 @@
     try {
       const response = await fetch(`${SERVER_URL}/api/health`);
       if (response.ok) {
-        console.log('✅ Сервер предсказаний доступен');
+        console.log('✅ Сервер Yandex GPT доступен');
       }
     } catch (error) {
-      console.warn('⚠️ Сервер предсказаний недоступен. Будут использоваться локальные предсказания.');
+      console.warn('⚠️ Сервер Yandex GPT недоступен. Будут использоваться локальные предсказания.');
     }
   });
 </script>
