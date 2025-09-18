@@ -1,4 +1,4 @@
-<!-- Сборка 41 -->
+<!-- Сборка 43 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -47,10 +47,10 @@
       margin-top: 80px;
       width: 100%;
     }
-    /* Главное меню — кнопки подняты выше */
+    /* Главное меню */
     #mainScreen {
       justify-content: flex-start;
-      margin-top: 150px; /* регулируй это значение */
+      padding-top: 150px; /* Подняли иконки вверх */
     }
     .icon-grid {
       display: grid;
@@ -139,20 +139,17 @@
       max-height: 300px;
       overflow-y: auto;
     }
-    
     /* Стили для экрана Таро */
     #tarotScreen {
       justify-content: flex-start;
       padding-top: 30px;
     }
-    
     .tarot-text {
       max-height: 40vh;
       overflow-y: auto;
       margin-top: 15px;
       padding: 10px 15px;
     }
-    
     /* Индикатор загрузки */
     .loader {
       border: 3px solid #f3f3f3;
@@ -164,7 +161,6 @@
       margin: 10px auto;
       display: none;
     }
-    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -176,7 +172,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 41</div>
+  <div class="build">Сборка 43</div>
 </header>
 
 <!-- Главный экран -->
@@ -190,5 +186,6 @@
 </div>
 
 <!-- Остальные экраны остаются без изменений -->
+
 </body>
 </html>
