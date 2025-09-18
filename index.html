@@ -1,4 +1,4 @@
-<!-- Сборка 43 -->
+<!-- Сборка 45 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -42,15 +42,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       text-align: center;
       margin-top: 80px;
       width: 100%;
     }
-    /* Главное меню */
     #mainScreen {
       justify-content: flex-start;
-      padding-top: 150px; /* Подняли иконки вверх */
+      padding-top: 150px;
     }
     .icon-grid {
       display: grid;
@@ -139,17 +137,20 @@
       max-height: 300px;
       overflow-y: auto;
     }
+    
     /* Стили для экрана Таро */
     #tarotScreen {
       justify-content: flex-start;
       padding-top: 30px;
     }
+    
     .tarot-text {
       max-height: 40vh;
       overflow-y: auto;
       margin-top: 15px;
       padding: 10px 15px;
     }
+    
     /* Индикатор загрузки */
     .loader {
       border: 3px solid #f3f3f3;
@@ -161,6 +162,7 @@
       margin: 10px auto;
       display: none;
     }
+    
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -172,7 +174,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 43</div>
+  <div class="build">Сборка 45</div>
 </header>
 
 <!-- Главный экран -->
@@ -185,7 +187,241 @@
   </div>
 </div>
 
-<!-- Остальные экраны остаются без изменений -->
+<!-- Экран печенья -->
+<div id="cookieScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
+  <img id="cookieImage" class="cookie-image" src="cookie_closed.png" alt="Печенье" onclick="openCookie()">
+  <div class="loader" id="cookieLoader"></div>
+  <div class="fortune" id="fortune"></div>
+  <button class="back-button" style="top:auto; bottom:10px;" onclick="reloadCookie()"><img src="reload.png"></button>
+</div>
+
+<!-- Экран шара -->
+<div id="sphereScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
+  <img src="sphere.png" alt="Шар" class="sphere-image">
+  <div class="sphere-text" id="sphereText"></div>
+</div>
+
+<!-- Экран Таро -->
+<div id="tarotScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
+  <div class="tarot-container">
+    <div class="tarot-card" onclick="openTarotCard(this,1)"><img src="close.png"></div>
+    <div class="tarot-card" onclick="openTarotCard(this,2)"><img src="close.png"></div>
+    <div class="tarot-card" onclick="openTarotCard(this,3)"><img src="close.png"></div>
+  </div>
+  <div class="tarot-text" id="tarotText"></div>
+</div>
+
+<!-- Экран Зодиака -->
+<div id="zodiacScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
+  <div class="zodiac-grid" id="zodiacGrid"></div>
+</div>
+
+<!-- Экран прогноза зодиака -->
+<div id="zodiacDetailScreen" class="container" style="display:none;">
+  <button class="back-button" onclick="backToZodiac()"><img src="back.png"></button>
+  <img id="zodiacDetailImg" class="zodiac-detail-img" src="" alt="Знак">
+  <div class="zodiac-text" id="zodiacText"></div>
+</div>
+
+<script>
+  let predictions = [];
+  let spherePredictions = [];
+  let tarotPredictions = [];
+  let zodiacPredictions = [];
+  
+  // URL вашего сервера с Yandex GPT
+  const SERVER_URL = 'https://fortune.kosta.enpire.ru'; // Замените на ваш URL сервера
+
+  // Локальные предсказания для fallback
+  const localPredictions = [
+    "не тянет с гпт",
+  ];
+
+  fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data);
+  fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data);
+  fetch('tarot_predictions.json').then(res=>res.json()).then(data=>tarotPredictions=data);
+  fetch('zodiac_predictions.json').then(res=>res.json()).then(data=>zodiacPredictions=data);
+
+  function showScreen(id){
+    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+    document.getElementById(id).style.display="flex";
+  }
+  
+  function backToMain(){
+    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+    document.getElementById('mainScreen').style.display="flex";
+  }
+
+  // Печенье с Yandex GPT API
+  async function openCookie(){
+    const img = document.getElementById("cookieImage");
+    const fortune = document.getElementById("fortune");
+    const loader = document.getElementById("cookieLoader");
+    
+    img.src = "cookie_open.png";
+    img.classList.add("opened");
+    
+    // Показываем загрузку
+    fortune.textContent = "";
+    loader.style.display = "block";
+    fortune.classList.remove("show");
+    
+    try {
+      // Генерация предсказания через сервер с Yandex GPT
+      const prediction = await generateYandexPrediction();
+      fortune.textContent = prediction;
+    } catch (error) {
+      console.error("Ошибка генерации предсказания:", error);
+      // Fallback на локальные предсказания
+      const randomIndex = Math.floor(Math.random() * localPredictions.length);
+      fortune.textContent = localPredictions[randomIndex];
+    } finally {
+      loader.style.display = "none";
+      fortune.classList.add("show");
+    }
+  }
+  
+  // Функция для генерации предсказания через Yandex GPT
+  async function generateYandexPrediction() {
+    try {
+      const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Ошибка сервера: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        return data.prediction;
+      } else {
+        throw new Error(data.error || 'Неизвестная ошибка сервера');
+      }
+      
+    } catch (error) {
+      console.error("Ошибка при обращении к серверу Yandex GPT:", error);
+      throw error;
+    }
+  }
+
+  function reloadCookie(){
+    const img = document.getElementById("cookieImage");
+    const fortune = document.getElementById("fortune");
+    const loader = document.getElementById("cookieLoader");
+    
+    img.src = "cookie_closed.png";
+    img.classList.remove("opened");
+    fortune.textContent = "";
+    fortune.classList.remove("show");
+    loader.style.display = "none";
+  }
+
+  // Шар
+  const sphereImg = document.querySelector(".sphere-image");
+  const sphereText = document.getElementById("sphereText");
+  sphereImg.addEventListener("click", showSpherePrediction);
+
+  let lastX = null, lastY = null, lastZ = null;
+  window.addEventListener("devicemotion", (e) => {
+    const {x, y, z} = e.accelerationIncludingGravity;
+    if(lastX !== null){
+      const deltaX = Math.abs(x - lastX);
+      const deltaY = Math.abs(y - lastY);
+      const deltaZ = Math.abs(z - lastZ);
+      const speed = deltaX + deltaY + deltaZ;
+      if(speed > 25){ showSpherePrediction(); }
+    }
+    lastX = x; lastY = y; lastZ = z;
+  });
+
+  function showSpherePrediction(){
+    if(spherePredictions.length > 0){
+      const idx = Math.floor(Math.random() * spherePredictions.length);
+      sphereText.textContent = spherePredictions[idx];
+    } else {
+      const randomIndex = Math.floor(Math.random() * localPredictions.length);
+      sphereText.textContent = localPredictions[randomIndex];
+    }
+    sphereText.classList.add("show");
+  }
+
+  // Таро
+  let openedCards = 0;
+  function openTarotCard(container, num){
+    const img = container.querySelector("img");
+    if(img.src.includes("close.png")){
+      img.src = `open${num}.png`;
+      openedCards++;
+      if(openedCards === 3){
+        if(tarotPredictions.length > 0){
+          document.getElementById("tarotText").innerHTML =
+            tarotPredictions.map(p => `<p>${p.text}</p>`).join("");
+        } else {
+          document.getElementById("tarotText").textContent = "Толкование недоступно";
+        }
+        document.getElementById("tarotText").classList.add("show");
+      }
+    }
+  }
+
+  // Зодиак
+  const zodiacGrid = document.getElementById("zodiacGrid");
+  for(let i = 1; i <= 12; i++){
+    const img = document.createElement("img");
+    img.src = `Group (${i}).png`;
+    img.onclick = () => openZodiacDetail(i);
+    zodiacGrid.appendChild(img);
+  }
+
+  function openZodiacDetail(i){
+    document.querySelectorAll('.container').forEach(c => c.style.display = "none");
+    const screen = document.getElementById("zodiacDetailScreen");
+    screen.style.display = "flex";
+    document.getElementById("zodiacDetailImg").src = `Group (${i}).png`;
+    
+    if(zodiacPredictions.length >= i) {
+      const prediction = zodiacPredictions[i-1];
+      if (typeof prediction === 'object' && prediction !== null) {
+        if (prediction.text) {
+          document.getElementById("zodiacText").textContent = prediction.text;
+        } else {
+          document.getElementById("zodiacText").textContent = JSON.stringify(prediction);
+        }
+      } else if (typeof prediction === 'string') {
+        document.getElementById("zodiacText").textContent = prediction;
+      } else {
+        document.getElementById("zodiacText").textContent = "Прогноз недоступен";
+      }
+    } else {
+      document.getElementById("zodiacText").textContent = "Прогноз недоступен";
+    }
+  }
+  
+  function backToZodiac(){
+    document.querySelectorAll('.container').forEach(c => c.style.display = "none");
+    document.getElementById("zodiacScreen").style.display = "flex";
+  }
+
+  window.addEventListener('load', async () => {
+    try {
+      const response = await fetch(`${SERVER_URL}/api/health`);
+      if (response.ok) {
+        console.log('✅ Сервер Yandex GPT доступен');
+      }
+    } catch (error) {
+      console.warn('⚠️ Сервер Yandex GPT недоступен. Будут использоваться локальные предсказания.');
+    }
+  });
+</script>
 
 </body>
 </html>
