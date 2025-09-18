@@ -1,4 +1,4 @@
-<!-- Сборка 39 -->
+<!-- Сборка 40 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -44,7 +44,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      margin-top: 40px;
+      margin-top: 80px;
       width: 100%;
     }
     .icon-grid {
@@ -171,7 +171,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 39</div>
+  <div class="build">Сборка 40</div>
 </header>
 
 <!-- Главный экран -->
@@ -229,7 +229,14 @@
   let spherePredictions = [];
   let tarotPredictions = [];
   let zodiacPredictions = [];
-  const DEEPSEEK_API_KEY = 'sk-2c1bea3f1d6b417990b99340ac3ac155'; // ВНИМАНИЕ: НЕБЕЗОПАСНО!
+  
+  // URL вашего сервера с Yandex GPT
+  const SERVER_URL = 'https://fortune.kosta.enpire.ru'; // Замените на ваш URL сервера
+
+  // Локальные предсказания для fallback
+  const localPredictions = [
+    "не тянет с гпт",
+  ];
 
   fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data);
   fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data);
@@ -240,12 +247,13 @@
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById(id).style.display="flex";
   }
+  
   function backToMain(){
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById('mainScreen').style.display="flex";
   }
 
-  // Печенье с DeepSeek API
+  // Печенье с Yandex GPT API
   async function openCookie(){
     const img = document.getElementById("cookieImage");
     const fortune = document.getElementById("fortune");
@@ -257,119 +265,105 @@
     // Показываем загрузку
     fortune.textContent = "";
     loader.style.display = "block";
+    fortune.classList.remove("show");
     
     try {
-      // Генерация предсказания через DeepSeek API
-      const prediction = await generateDeepSeekPrediction();
+      // Генерация предсказания через сервер с Yandex GPT
+      const prediction = await generateYandexPrediction();
       fortune.textContent = prediction;
     } catch (error) {
       console.error("Ошибка генерации предсказания:", error);
       // Fallback на локальные предсказания
-      if(predictions.length > 0){
-        const idx = Math.floor(Math.random() * predictions.length);
-        fortune.textContent = predictions[idx];
-      } else {
-        fortune.textContent = "Предсказание недоступно";
-      }
+      const randomIndex = Math.floor(Math.random() * localPredictions.length);
+      fortune.textContent = localPredictions[randomIndex];
     } finally {
       loader.style.display = "none";
       fortune.classList.add("show");
     }
   }
   
-  // Функция для генерации предсказания через DeepSeek API
-  async function generateDeepSeekPrediction() {
+  // Функция для генерации предсказания через Yandex GPT
+  async function generateYandexPrediction() {
     try {
-      const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: [
-            {
-              role: "system",
-              content: "Ты мистический оракул, который дает мудрые, позитивные и вдохновляющие предсказания на будущее. Предсказания должны быть краткими (1-2 предложения), загадочными и обнадеживающими. Отвечай только текстом предсказания без дополнительных объяснений."
-            },
-            {
-              role: "user", 
-              content: "Сгенерируй случайное предсказание для печенья удачи на русском языке."
-            }
-          ],
-          max_tokens: 50,
-          temperature: 0.8
-        })
+          'Content-Type': 'application/json'
+        }
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`DeepSeek API error: ${errorData.error?.message || response.status}`);
+        throw new Error(`Ошибка сервера: ${response.status}`);
       }
       
       const data = await response.json();
-      return data.choices[0].message.content;
+      
+      if (data.success) {
+        return data.prediction;
+      } else {
+        throw new Error(data.error || 'Неизвестная ошибка сервера');
+      }
       
     } catch (error) {
-      console.error("Error calling DeepSeek API:", error);
+      console.error("Ошибка при обращении к серверу Yandex GPT:", error);
       throw error;
     }
   }
 
   function reloadCookie(){
-    const img=document.getElementById("cookieImage");
-    const fortune=document.getElementById("fortune");
+    const img = document.getElementById("cookieImage");
+    const fortune = document.getElementById("fortune");
     const loader = document.getElementById("cookieLoader");
     
-    img.src="cookie_closed.png";
+    img.src = "cookie_closed.png";
     img.classList.remove("opened");
-    fortune.textContent="";
+    fortune.textContent = "";
     fortune.classList.remove("show");
     loader.style.display = "none";
   }
 
   // Шар
-  const sphereImg=document.querySelector(".sphere-image");
-  const sphereText=document.getElementById("sphereText");
+  const sphereImg = document.querySelector(".sphere-image");
+  const sphereText = document.getElementById("sphereText");
   sphereImg.addEventListener("click", showSpherePrediction);
 
-  let lastX=null,lastY=null,lastZ=null;
-  window.addEventListener("devicemotion", (e)=>{
-    const {x,y,z}=e.accelerationIncludingGravity;
-    if(lastX!==null){
-      const deltaX=Math.abs(x-lastX);
-      const deltaY=Math.abs(y-lastY);
-      const deltaZ=Math.abs(z-lastZ);
-      const speed=deltaX+deltaY+deltaZ;
-      if(speed>25){ showSpherePrediction(); }
+  let lastX = null, lastY = null, lastZ = null;
+  window.addEventListener("devicemotion", (e) => {
+    const {x, y, z} = e.accelerationIncludingGravity;
+    if(lastX !== null){
+      const deltaX = Math.abs(x - lastX);
+      const deltaY = Math.abs(y - lastY);
+      const deltaZ = Math.abs(z - lastZ);
+      const speed = deltaX + deltaY + deltaZ;
+      if(speed > 25){ showSpherePrediction(); }
     }
-    lastX=x;lastY=y;lastZ=z;
+    lastX = x; lastY = y; lastZ = z;
   });
 
   function showSpherePrediction(){
-    if(spherePredictions.length>0){
-      const idx=Math.floor(Math.random()*spherePredictions.length);
-      sphereText.textContent=spherePredictions[idx];
+    if(spherePredictions.length > 0){
+      const idx = Math.floor(Math.random() * spherePredictions.length);
+      sphereText.textContent = spherePredictions[idx];
     } else {
-      sphereText.textContent="Предсказание недоступно";
+      const randomIndex = Math.floor(Math.random() * localPredictions.length);
+      sphereText.textContent = localPredictions[randomIndex];
     }
     sphereText.classList.add("show");
   }
 
   // Таро
-  let openedCards=0;
-  function openTarotCard(container,num){
-    const img=container.querySelector("img");
+  let openedCards = 0;
+  function openTarotCard(container, num){
+    const img = container.querySelector("img");
     if(img.src.includes("close.png")){
-      img.src=`open${num}.png`;
+      img.src = `open${num}.png`;
       openedCards++;
-      if(openedCards===3){
-        if(tarotPredictions.length>0){
-          document.getElementById("tarotText").innerHTML=
-            tarotPredictions.map(p=>`<p>${p.text}</p>`).join("");
+      if(openedCards === 3){
+        if(tarotPredictions.length > 0){
+          document.getElementById("tarotText").innerHTML =
+            tarotPredictions.map(p => `<p>${p.text}</p>`).join("");
         } else {
-          document.getElementById("tarotText").textContent="Толкование недоступно";
+          document.getElementById("tarotText").textContent = "Толкование недоступно";
         }
         document.getElementById("tarotText").classList.add("show");
       }
@@ -377,19 +371,19 @@
   }
 
   // Зодиак
-  const zodiacGrid=document.getElementById("zodiacGrid");
-  for(let i=1;i<=12;i++){
-    const img=document.createElement("img");
-    img.src=`Group (${i}).png`;
-    img.onclick=()=>openZodiacDetail(i);
+  const zodiacGrid = document.getElementById("zodiacGrid");
+  for(let i = 1; i <= 12; i++){
+    const img = document.createElement("img");
+    img.src = `Group (${i}).png`;
+    img.onclick = () => openZodiacDetail(i);
     zodiacGrid.appendChild(img);
   }
 
   function openZodiacDetail(i){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    const screen=document.getElementById("zodiacDetailScreen");
-    screen.style.display="flex";
-    document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
+    document.querySelectorAll('.container').forEach(c => c.style.display = "none");
+    const screen = document.getElementById("zodiacDetailScreen");
+    screen.style.display = "flex";
+    document.getElementById("zodiacDetailImg").src = `Group (${i}).png`;
     
     // ИСПРАВЛЕНИЕ: Правильное отображение текста прогноза
     if(zodiacPredictions.length >= i) {
@@ -420,10 +414,27 @@
   }
   
   function backToZodiac(){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById("zodiacScreen").style.display="flex";
+    document.querySelectorAll('.container').forEach(c => c.style.display = "none");
+    document.getElementById("zodiacScreen").style.display = "flex";
   }
+
+  // Проверка доступности сервера при загрузке
+  window.addEventListener('load', async () => {
+    try {
+      const response = await fetch(`${SERVER_URL}/api/health`);
+      if (response.ok) {
+        console.log('✅ Сервер Yandex GPT доступен');
+      }
+    } catch (error) {
+      console.warn('⚠️ Сервер Yandex GPT недоступен. Будут использоваться локальные предсказания.');
+    }
+  });
 </script>
 
 </body>
 </html>
+
+
+
+
+
