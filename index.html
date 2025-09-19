@@ -1,4 +1,3 @@
-<!-- Сборка 54 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -43,12 +42,11 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-top: 80px;
       width: 100%;
     }
     #mainScreen {
       justify-content: flex-start;
-      padding-top: 150px;
+      padding-top: 140px;
     }
     .icon-grid {
       display: flex;
@@ -57,13 +55,13 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
-      margin-top: 20px; /* Отступ ниже name.png */
     }
     .icon-grid img {
       width: 280px;
       height: 80px;
       cursor: pointer;
       transition: transform 0.2s;
+      margin-top: 0;
     }
     .icon-grid img:hover {
       transform: scale(1.02);
@@ -71,6 +69,7 @@
     .cookie-image {
       width: 180px;
       max-width: 250px;
+      margin-top: 140px;
       margin-bottom: 20px;
       transition: transform 0.5s ease;
     }
@@ -106,13 +105,13 @@
       width: 300px;
       height: 300px;
       cursor: pointer;
-      margin-top: 20px;
+      margin-top: 140px;
       margin-bottom: 30px;
     }
     .tarot-container {
       display: flex;
       gap: 15px;
-      margin-top: 10px;
+      margin-top: 140px;
     }
     .tarot-card img {
       width: 100px;
@@ -126,7 +125,7 @@
       align-items: center;
       width: 100%;
       max-width: 360px;
-      margin-top: 20px;
+      margin-top: 140px;
     }
     .zodiac-grid img {
       width: 100%;
@@ -138,6 +137,7 @@
       width: 150px;
       height: 150px;
       object-fit: contain;
+      margin-top: 140px;
     }
     .zodiac-text {
       max-height: 300px;
@@ -221,146 +221,143 @@
 </div>
 
 <script>
-  let predictions = [];
-  let spherePredictions = [];
-  let tarotPredictions = [];
-  let zodiacPredictions = [];
+let predictions = [];
+let spherePredictions = [];
+let tarotPredictions = [];
+let zodiacPredictions = [];
 
-  const SERVER_URL = 'https://fortune.kosta.enpire.ru';
-  const localPredictions = ["не тянет с гпт"];
+const SERVER_URL = 'https://fortune.kosta.enpire.ru';
+const localPredictions = ["не тянет с гпт"];
 
-  fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data);
-  fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data);
-  fetch('tarot_predictions.json').then(res=>res.json()).then(data=>tarotPredictions=data);
-  fetch('zodiac_predictions.json').then(res=>res.json()).then(data=>zodiacPredictions=data);
+fetch('predictions.json').then(res=>res.json()).then(data=>predictions=data);
+fetch('sphere_predictions.json').then(res=>res.json()).then(data=>spherePredictions=data);
+fetch('tarot_predictions.json').then(res=>res.json()).then(data=>tarotPredictions=data);
+fetch('zodiac_predictions.json').then(res=>res.json()).then(data=>zodiacPredictions=data);
 
-  function showScreen(id){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById(id).style.display="flex";
+function showScreen(id){
+  document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+  document.getElementById(id).style.display="flex";
+}
+function backToMain(){
+  document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+  document.getElementById('mainScreen').style.display="flex";
+}
+async function openCookie(){
+  const img = document.getElementById("cookieImage");
+  const fortune = document.getElementById("fortune");
+  const loader = document.getElementById("cookieLoader");
+  img.src = "cookie_open.png";
+  img.classList.add("opened");
+  fortune.textContent = "";
+  loader.style.display = "block";
+  fortune.classList.remove("show");
+  try{
+    const prediction = await generateYandexPrediction();
+    fortune.textContent = prediction;
+  } catch(error){
+    console.error("Ошибка генерации предсказания:", error);
+    fortune.textContent = localPredictions[Math.floor(Math.random() * localPredictions.length)];
+  } finally{
+    loader.style.display = "none";
+    fortune.classList.add("show");
   }
-  function backToMain(){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById('mainScreen').style.display="flex";
-  }
-
-  async function openCookie(){
-    const img = document.getElementById("cookieImage");
-    const fortune = document.getElementById("fortune");
-    const loader = document.getElementById("cookieLoader");
-    img.src = "cookie_open.png";
-    img.classList.add("opened");
-    fortune.textContent = "";
-    loader.style.display = "block";
-    fortune.classList.remove("show");
-    try {
-      const prediction = await generateYandexPrediction();
-      fortune.textContent = prediction;
-    } catch {
-      fortune.textContent = localPredictions[Math.floor(Math.random()*localPredictions.length)];
-    } finally {
-      loader.style.display = "none";
-      fortune.classList.add("show");
-    }
-  }
-
-  async function generateYandexPrediction(){
+}
+async function generateYandexPrediction() {
+  try {
     const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {method:'POST', headers:{'Content-Type':'application/json'}});
     if(!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
     const data = await response.json();
     if(data.success) return data.prediction;
-    else throw new Error(data.error || 'Неизвестная ошибка сервера');
+    else throw new Error(data.error||'Неизвестная ошибка сервера');
+  } catch(error){
+    console.error("Ошибка при обращении к серверу Yandex GPT:", error);
+    throw error;
   }
-
-  function reloadCookie(){
-    const img = document.getElementById("cookieImage");
-    const fortune = document.getElementById("fortune");
-    const loader = document.getElementById("cookieLoader");
-    img.src = "cookie_closed.png";
-    img.classList.remove("opened");
-    fortune.textContent = "";
-    fortune.classList.remove("show");
-    loader.style.display = "none";
+}
+function reloadCookie(){
+  const img = document.getElementById("cookieImage");
+  const fortune = document.getElementById("fortune");
+  const loader = document.getElementById("cookieLoader");
+  img.src = "cookie_closed.png";
+  img.classList.remove("opened");
+  fortune.textContent = "";
+  fortune.classList.remove("show");
+  loader.style.display = "none";
+}
+const sphereImg = document.querySelector(".sphere-image");
+const sphereText = document.getElementById("sphereText");
+sphereImg.addEventListener("click", showSpherePrediction);
+let lastX = null, lastY = null, lastZ = null;
+window.addEventListener("devicemotion",(e)=>{
+  const {x,y,z}=e.accelerationIncludingGravity;
+  if(lastX!==null){
+    const speed=Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ);
+    if(speed>25) showSpherePrediction();
   }
-
-  const sphereImg = document.querySelector(".sphere-image");
-  const sphereText = document.getElementById("sphereText");
-  sphereImg.addEventListener("click", showSpherePrediction);
-
-  let lastX=null,lastY=null,lastZ=null;
-  window.addEventListener("devicemotion",(e)=>{
-    const{x,y,z}=e.accelerationIncludingGravity;
-    if(lastX!==null){
-      const speed=Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ);
-      if(speed>25) showSpherePrediction();
-    }
-    lastX=x; lastY=y; lastZ=z;
-  });
-  function showSpherePrediction(){
-    if(spherePredictions.length>0){
-      sphereText.textContent = spherePredictions[Math.floor(Math.random()*spherePredictions.length)];
-    } else {
-      sphereText.textContent = localPredictions[Math.floor(Math.random()*localPredictions.length)];
-    }
-    sphereText.classList.add("show");
+  lastX=x; lastY=y; lastZ=z;
+});
+function showSpherePrediction(){
+  if(spherePredictions.length>0){
+    sphereText.textContent=spherePredictions[Math.floor(Math.random()*spherePredictions.length)];
+  } else {
+    sphereText.textContent=localPredictions[Math.floor(Math.random()*localPredictions.length)];
   }
-
-  let openedCards=0;
-  function openTarotCard(container,num){
-    const img=container.querySelector("img");
-    if(img.src.includes("close.png")){
-      img.src=`open${num}.png`;
-      openedCards++;
-      if(openedCards===3){
-        if(tarotPredictions.length>0){
-          document.getElementById("tarotText").innerHTML=tarotPredictions.map(p=>`<p>${p.text}</p>`).join("");
-        } else {
-          document.getElementById("tarotText").textContent="Толкование недоступно";
-        }
-        document.getElementById("tarotText").classList.add("show");
-      }
-    }
-  }
-
-  const zodiacGrid=document.getElementById("zodiacGrid");
-  for(let i=1;i<=12;i++){
-    const img=document.createElement("img");
-    img.src=`Group (${i}).png`;
-    img.onclick=()=>openZodiacDetail(i);
-    zodiacGrid.appendChild(img);
-  }
-
-  function openZodiacDetail(i){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    const screen=document.getElementById("zodiacDetailScreen");
-    screen.style.display="flex";
-    document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
-    if(zodiacPredictions.length>=i){
-      const prediction=zodiacPredictions[i-1];
-      if(typeof prediction==='object'&&prediction!==null){
-        document.getElementById("zodiacText").textContent=prediction.text||JSON.stringify(prediction);
-      } else if(typeof prediction==='string'){
-        document.getElementById("zodiacText").textContent=prediction;
+  sphereText.classList.add("show");
+}
+let openedCards=0;
+function openTarotCard(container,num){
+  const img=container.querySelector("img");
+  if(img.src.includes("close.png")){
+    img.src=`open${num}.png`;
+    openedCards++;
+    if(openedCards===3){
+      const tarotTextElem=document.getElementById("tarotText");
+      if(tarotPredictions.length>0){
+        tarotTextElem.innerHTML=tarotPredictions.map(p=>`<p>${p.text}</p>`).join("");
       } else {
-        document.getElementById("zodiacText").textContent="Прогноз недоступен";
+        tarotTextElem.textContent="Толкование недоступно";
       }
+      tarotTextElem.classList.add("show");
+    }
+  }
+}
+const zodiacGrid=document.getElementById("zodiacGrid");
+for(let i=1;i<=12;i++){
+  const img=document.createElement("img");
+  img.src=`Group (${i}).png`;
+  img.onclick=()=>openZodiacDetail(i);
+  zodiacGrid.appendChild(img);
+}
+function openZodiacDetail(i){
+  document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+  const screen=document.getElementById("zodiacDetailScreen");
+  screen.style.display="flex";
+  document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
+  if(zodiacPredictions.length>=i){
+    const prediction=zodiacPredictions[i-1];
+    if(typeof prediction==="object" && prediction!==null){
+      document.getElementById("zodiacText").textContent=prediction.text||JSON.stringify(prediction);
+    } else if(typeof prediction==="string"){
+      document.getElementById("zodiacText").textContent=prediction;
     } else {
       document.getElementById("zodiacText").textContent="Прогноз недоступен";
     }
+  } else {
+    document.getElementById("zodiacText").textContent="Прогноз недоступен";
   }
-
-  function backToZodiac(){
-    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
-    document.getElementById("zodiacScreen").style.display="flex";
+}
+function backToZodiac(){
+  document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+  document.getElementById("zodiacScreen").style.display="flex";
+}
+window.addEventListener('load',async()=>{
+  try{
+    const response=await fetch(`${SERVER_URL}/api/health`);
+    if(response.ok) console.log('✅ Сервер Yandex GPT доступен');
+  } catch(error){
+    console.warn('⚠️ Сервер Yandex GPT недоступен. Будут использоваться локальные предсказания.');
   }
-
-  window.addEventListener('load', async ()=>{
-    try{
-      const response = await fetch(`${SERVER_URL}/api/health`);
-      if(response.ok) console.log('✅ Сервер Yandex GPT доступен');
-    }catch{
-      console.warn('⚠️ Сервер Yandex GPT недоступен. Будут использоваться локальные предсказания.');
-    }
-  });
+});
 </script>
 
 </body>
