@@ -51,16 +51,21 @@
       padding-top: 150px;
     }
     .icon-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 100px);
-      grid-gap: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
       justify-content: center;
       align-items: center;
+      padding: 20px;
     }
     .icon-grid img {
-      width: 100px;
-      height: 100px;
+      width: 280px;
+      height: 80px;
       cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .icon-grid img:hover {
+      transform: scale(1.02);
     }
     .cookie-image {
       width: 180px;
@@ -180,10 +185,10 @@
 <!-- Главный экран -->
 <div id="mainScreen" class="container">
   <div class="icon-grid">
-    <img src="sphere.png" alt="Шар" onclick="showScreen('sphereScreen')">
-    <img src="cookie.png" alt="Печенье" onclick="showScreen('cookieScreen')">
-    <img src="tarot.png" alt="Таро" onclick="showScreen('tarotScreen')">
-    <img src="zodiac.png" alt="Зодиак" onclick="showScreen('zodiacScreen')">
+    <img src="button_sphere.png" alt="Шар" onclick="showScreen('sphereScreen')">
+    <img src="button_cookie.png" alt="Печенье" onclick="showScreen('cookieScreen')">
+    <img src="button_tarot.png" alt="Таро" onclick="showScreen('tarotScreen')">
+    <img src="button_zodiac.png" alt="Зодиак" onclick="showScreen('zodiacScreen')">
   </div>
 </div>
 
