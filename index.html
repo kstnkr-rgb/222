@@ -1,4 +1,4 @@
-<!-- Сборка 45 -->
+<!-- Сборка 50 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -101,7 +101,9 @@
       width: 40px;
       height: 40px;
     }
-    .sphere-image {
+    .icon-grid img:first-child {
+      margin-top: 80px; /* Increase this value to move the sphere button lower */
+    }-image {
       width: 300px;
       height: 300px;
       cursor: pointer;
@@ -172,6 +174,9 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    .icon-grid img[src="button_sphere.png"] {
+  margin-top: 80px;
+}
   </style>
 </head>
 <body>
@@ -179,7 +184,7 @@
 <header>
   <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 45</div>
+  <div class="build">Сборка 50</div>
 </header>
 
 <!-- Главный экран -->
