@@ -107,8 +107,14 @@
       width: 300px;
       height: 300px;
       cursor: pointer;
-      margin-top: 150px; /* шар опущен на 130px */
+      margin-top: 150px;
       margin-bottom: 30px;
+    }
+    .sphere-hint {
+      font-size: 16px;
+      color: #fff;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+      margin-top: 10px;
     }
     .tarot-container {
       display: flex;
@@ -198,6 +204,7 @@
 <div id="sphereScreen" class="container" style="display:none;">
   <button class="back-button" onclick="backToMain()"><img src="back.png"></button>
   <img src="sphere.png" alt="Шар" class="sphere-image">
+  <div class="sphere-hint">(встряхни шар)</div>
   <div class="sphere-text" id="sphereText"></div>
 </div>
 
@@ -373,8 +380,3 @@
 
 </body>
 </html>
-
-
-
-
-
