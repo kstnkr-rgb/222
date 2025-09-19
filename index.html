@@ -1,4 +1,4 @@
-<!-- Сборка 55 -->
+<!-- Сборка 54 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -21,7 +21,7 @@
     }
     header {
       position: fixed;
-      top: 100px; /* отступ name.png от верха */
+      top: 100px;
       width: 100%;
       display: flex;
       flex-direction: column;
@@ -29,7 +29,7 @@
       z-index: 1000;
     }
     header img {
-      max-height: 40px;
+      max-height: 80px;
       margin: 2px 0;
     }
     header .build {
@@ -48,7 +48,7 @@
     }
     #mainScreen {
       justify-content: flex-start;
-      padding-top: 120px; /* 20px ниже name */
+      padding-top: 150px;
     }
     .icon-grid {
       display: flex;
@@ -57,13 +57,13 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      margin-top: 20px; /* Отступ ниже name.png */
     }
     .icon-grid img {
       width: 280px;
       height: 80px;
       cursor: pointer;
       transition: transform 0.2s;
-      margin-top: 20px; /* 20px ниже name */
     }
     .icon-grid img:hover {
       transform: scale(1.02);
@@ -73,7 +73,6 @@
       max-width: 250px;
       margin-bottom: 20px;
       transition: transform 0.5s ease;
-      margin-top: 20px; /* 20px ниже name */
     }
     .cookie-image.opened {
       transform: scale(1.2) rotate(-5deg);
@@ -107,13 +106,13 @@
       width: 300px;
       height: 300px;
       cursor: pointer;
-      margin-top: 20px; /* 20px ниже name */
+      margin-top: 20px;
       margin-bottom: 30px;
     }
     .tarot-container {
       display: flex;
       gap: 15px;
-      margin-top: 20px; /* 20px ниже name */
+      margin-top: 10px;
     }
     .tarot-card img {
       width: 100px;
@@ -127,7 +126,7 @@
       align-items: center;
       width: 100%;
       max-width: 360px;
-      margin-top: 20px; /* 20px ниже name */
+      margin-top: 20px;
     }
     .zodiac-grid img {
       width: 100%;
@@ -174,7 +173,7 @@
 
 <header>
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 55</div>
+  <div class="build">Сборка 54</div>
 </header>
 
 <div id="mainScreen" class="container">
@@ -239,7 +238,6 @@
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById(id).style.display="flex";
   }
-
   function backToMain(){
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById('mainScreen').style.display="flex";
@@ -258,19 +256,15 @@
       const prediction = await generateYandexPrediction();
       fortune.textContent = prediction;
     } catch {
-      const randomIndex = Math.floor(Math.random() * localPredictions.length);
-      fortune.textContent = localPredictions[randomIndex];
+      fortune.textContent = localPredictions[Math.floor(Math.random()*localPredictions.length)];
     } finally {
       loader.style.display = "none";
       fortune.classList.add("show");
     }
   }
 
-  async function generateYandexPrediction() {
-    const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
+  async function generateYandexPrediction(){
+    const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {method:'POST', headers:{'Content-Type':'application/json'}});
     if(!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
     const data = await response.json();
     if(data.success) return data.prediction;
@@ -294,14 +288,13 @@
 
   let lastX=null,lastY=null,lastZ=null;
   window.addEventListener("devicemotion",(e)=>{
-    const {x,y,z}=e.accelerationIncludingGravity;
+    const{x,y,z}=e.accelerationIncludingGravity;
     if(lastX!==null){
       const speed=Math.abs(x-lastX)+Math.abs(y-lastY)+Math.abs(z-lastZ);
       if(speed>25) showSpherePrediction();
     }
     lastX=x; lastY=y; lastZ=z;
   });
-
   function showSpherePrediction(){
     if(spherePredictions.length>0){
       sphereText.textContent = spherePredictions[Math.floor(Math.random()*spherePredictions.length)];
@@ -343,9 +336,9 @@
     document.getElementById("zodiacDetailImg").src=`Group (${i}).png`;
     if(zodiacPredictions.length>=i){
       const prediction=zodiacPredictions[i-1];
-      if(typeof prediction==="object"&&prediction!==null){
+      if(typeof prediction==='object'&&prediction!==null){
         document.getElementById("zodiacText").textContent=prediction.text||JSON.stringify(prediction);
-      } else if(typeof prediction==="string"){
+      } else if(typeof prediction==='string'){
         document.getElementById("zodiacText").textContent=prediction;
       } else {
         document.getElementById("zodiacText").textContent="Прогноз недоступен";
@@ -360,11 +353,11 @@
     document.getElementById("zodiacScreen").style.display="flex";
   }
 
-  window.addEventListener('load', async()=>{
+  window.addEventListener('load', async ()=>{
     try{
-      const response=await fetch(`${SERVER_URL}/api/health`);
+      const response = await fetch(`${SERVER_URL}/api/health`);
       if(response.ok) console.log('✅ Сервер Yandex GPT доступен');
-    } catch {
+    }catch{
       console.warn('⚠️ Сервер Yandex GPT недоступен. Будут использоваться локальные предсказания.');
     }
   });
