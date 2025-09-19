@@ -225,7 +225,7 @@
   let spherePredictions = [];
   let tarotPredictions = [];
   let zodiacPredictions = [];
-  
+
   const SERVER_URL = 'https://fortune.kosta.enpire.ru';
   const localPredictions = ["не тянет с гпт"];
 
@@ -242,6 +242,7 @@
     document.querySelectorAll('.container').forEach(c=>c.style.display="none");
     document.getElementById('mainScreen').style.display="flex";
   }
+
   async function openCookie(){
     const img = document.getElementById("cookieImage");
     const fortune = document.getElementById("fortune");
@@ -254,21 +255,22 @@
     try {
       const prediction = await generateYandexPrediction();
       fortune.textContent = prediction;
-    } catch (error) {
-      console.error(error);
+    } catch {
       fortune.textContent = localPredictions[Math.floor(Math.random()*localPredictions.length)];
     } finally {
       loader.style.display = "none";
       fortune.classList.add("show");
     }
   }
-  async function generateYandexPrediction() {
+
+  async function generateYandexPrediction(){
     const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {method:'POST', headers:{'Content-Type':'application/json'}});
-    if (!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
+    if(!response.ok) throw new Error(`Ошибка сервера: ${response.status}`);
     const data = await response.json();
-    if (data.success) return data.prediction;
+    if(data.success) return data.prediction;
     else throw new Error(data.error || 'Неизвестная ошибка сервера');
   }
+
   function reloadCookie(){
     const img = document.getElementById("cookieImage");
     const fortune = document.getElementById("fortune");
@@ -342,4 +344,24 @@
         document.getElementById("zodiacText").textContent="Прогноз недоступен";
       }
     } else {
-      document.getElement
+      document.getElementById("zodiacText").textContent="Прогноз недоступен";
+    }
+  }
+
+  function backToZodiac(){
+    document.querySelectorAll('.container').forEach(c=>c.style.display="none");
+    document.getElementById("zodiacScreen").style.display="flex";
+  }
+
+  window.addEventListener('load', async ()=>{
+    try{
+      const response = await fetch(`${SERVER_URL}/api/health`);
+      if(response.ok) console.log('✅ Сервер Yandex GPT доступен');
+    }catch{
+      console.warn('⚠️ Сервер Yandex GPT недоступен. Будут использоваться локальные предсказания.');
+    }
+  });
+</script>
+
+</body>
+</html>
