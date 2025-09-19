@@ -1,4 +1,4 @@
-<!-- Сборка 50 -->
+<!-- Сборка 52 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -24,15 +24,30 @@
       top: 10px;
       width: 100%;
       display: flex;
-      flex-direction: column;
+      flex-direction: column; /* Changed from row to column */
       align-items: center;
       z-index: 1000;
     }
+    /* Add a wrapper div for images to align them */
+    .header-images {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%; /* Set container width */
+    }
     header img {
-      max-height: 40px;
-      margin: 2px 0;
+      height: 35px;
+      width: auto;
+      margin: 0;
+    }
+    .header-images img {
+      width: 100%; /* Make image fill container width */
+      height: auto; /* Maintain aspect ratio */
+      margin: 0;
     }
     header .build {
+      position: absolute;
+      right: 20px;
       font-size: 12px;
       color: #fff;
       text-shadow: 0 1px 3px rgba(0,0,0,0.7);
@@ -103,12 +118,6 @@
     }
     .icon-grid img:first-child {
       margin-top: 80px; /* Increase this value to move the sphere button lower */
-    }-image {
-      width: 300px;
-      height: 300px;
-      cursor: pointer;
-      margin-top: 20px;
-      margin-bottom: 30px;
     }
     .tarot-container {
       display: flex;
@@ -177,14 +186,34 @@
     .icon-grid img[src="button_sphere.png"] {
   margin-top: 80px;
 }
+.sphere-image {
+    width: 300px;
+    height: 300px;
+    cursor: pointer;
+    margin-top: 120px; /* Increase this value to move the sphere image lower */
+    margin-bottom: 30px;
+}
+.header-images img:last-child {
+    height: 35px;
+    width: auto;
+    margin: 0;
+}
+.header-images img:first-child {
+    height: 35px;
+    width: auto;
+    transform: scale(0.6);
+    transform-origin: left top;
+    margin: 0;
+}
   </style>
 </head>
 <body>
 
 <header>
-  <img src="logo.png" alt="Логотип">
-  <img src="name.png" alt="Название">
-  <div class="build">Сборка 50</div>
+  <div class="header-images">
+    <img src="name.png" alt="Название">
+  </div>
+  <div class="build">Сборка 52</div>
 </header>
 
 <!-- Главный экран -->
@@ -432,6 +461,5 @@
     }
   });
 </script>
-
 </body>
 </html>
