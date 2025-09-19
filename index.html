@@ -1,4 +1,4 @@
-<!-- Сборка 50 -->
+<!-- Сборка 51 -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -102,8 +102,9 @@
       height: 40px;
     }
     .icon-grid img:first-child {
-      margin-top: 80px; /* Increase this value to move the sphere button lower */
-    }-image {
+      margin-top: 80px; /* Сдвигаем кнопку сферы вниз */
+    }
+    .sphere-image {
       width: 300px;
       height: 300px;
       cursor: pointer;
@@ -175,16 +176,15 @@
       100% { transform: rotate(360deg); }
     }
     .icon-grid img[src="button_sphere.png"] {
-  margin-top: 80px;
-}
+      margin-top: 80px;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <img src="logo.png" alt="Логотип">
   <img src="name.png" alt="Название">
-  <div class="build">Сборка 50</div>
+  <div class="build">Сборка 51</div>
 </header>
 
 <!-- Главный экран -->
@@ -243,10 +243,8 @@
   let tarotPredictions = [];
   let zodiacPredictions = [];
   
-  // URL вашего сервера с Yandex GPT
-  const SERVER_URL = 'https://fortune.kosta.enpire.ru'; // Замените на ваш URL сервера
+  const SERVER_URL = 'https://fortune.kosta.enpire.ru'; // Сервер для Yandex GPT
 
-  // Локальные предсказания для fallback
   const localPredictions = [
     "не тянет с гпт",
   ];
@@ -266,7 +264,6 @@
     document.getElementById('mainScreen').style.display="flex";
   }
 
-  // Печенье с Yandex GPT API
   async function openCookie(){
     const img = document.getElementById("cookieImage");
     const fortune = document.getElementById("fortune");
@@ -275,18 +272,15 @@
     img.src = "cookie_open.png";
     img.classList.add("opened");
     
-    // Показываем загрузку
     fortune.textContent = "";
     loader.style.display = "block";
     fortune.classList.remove("show");
     
     try {
-      // Генерация предсказания через сервер с Yandex GPT
       const prediction = await generateYandexPrediction();
       fortune.textContent = prediction;
     } catch (error) {
       console.error("Ошибка генерации предсказания:", error);
-      // Fallback на локальные предсказания
       const randomIndex = Math.floor(Math.random() * localPredictions.length);
       fortune.textContent = localPredictions[randomIndex];
     } finally {
@@ -295,7 +289,6 @@
     }
   }
   
-  // Функция для генерации предсказания через Yandex GPT
   async function generateYandexPrediction() {
     try {
       const response = await fetch(`${SERVER_URL}/api/generate-prediction`, {
@@ -304,19 +297,15 @@
           'Content-Type': 'application/json'
         }
       });
-      
       if (!response.ok) {
         throw new Error(`Ошибка сервера: ${response.status}`);
       }
-      
       const data = await response.json();
-      
       if (data.success) {
         return data.prediction;
       } else {
         throw new Error(data.error || 'Неизвестная ошибка сервера');
       }
-      
     } catch (error) {
       console.error("Ошибка при обращении к серверу Yandex GPT:", error);
       throw error;
@@ -335,7 +324,6 @@
     loader.style.display = "none";
   }
 
-  // Шар
   const sphereImg = document.querySelector(".sphere-image");
   const sphereText = document.getElementById("sphereText");
   sphereImg.addEventListener("click", showSpherePrediction);
@@ -364,7 +352,6 @@
     sphereText.classList.add("show");
   }
 
-  // Таро
   let openedCards = 0;
   function openTarotCard(container, num){
     const img = container.querySelector("img");
@@ -383,7 +370,6 @@
     }
   }
 
-  // Зодиак
   const zodiacGrid = document.getElementById("zodiacGrid");
   for(let i = 1; i <= 12; i++){
     const img = document.createElement("img");
@@ -435,4 +421,3 @@
 
 </body>
 </html>
-
